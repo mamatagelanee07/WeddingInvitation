@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">WeddingInvitation</string>
+    <string name="content_desc_splash">splash image</string>
 </resources>
