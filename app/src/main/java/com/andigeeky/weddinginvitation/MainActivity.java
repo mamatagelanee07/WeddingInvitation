@@ -20,12 +20,16 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_register).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email = ((EditText) findViewById(R.id.edt_email)).getText().toString();
-                String password = ((EditText) findViewById(R.id.edt_confirm_pwd)).getText().toString();
-                AuthHelper authHelper = new AuthHelper(MainActivity.this);
-                authHelper.register(email, password);
+                registerWithCredentials();
             }
         });
 
+    }
+
+    private void registerWithCredentials() {
+        String email = ((EditText) findViewById(R.id.edt_email)).getText().toString();
+        String password = ((EditText) findViewById(R.id.edt_confirm_pwd)).getText().toString();
+        AuthHelper authHelper = new AuthHelper(MainActivity.this);
+        authHelper.register(email, password);
     }
 }
