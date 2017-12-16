@@ -1,5 +1,6 @@
 package com.andigeeky.weddinginvitation;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,6 +11,12 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.andigeeky.weddinginvitation.auth.AuthHelper;
+import com.andigeeky.weddinginvitation.auth.vo.User;
+import com.andigeeky.weddinginvitation.newarchitecture.JobManagerFactory;
+import com.andigeeky.weddinginvitation.newarchitecture.RegisterUseCase;
+import com.andigeeky.weddinginvitation.newarchitecture.RemoteRepositoryDataStore;
+import com.andigeeky.weddinginvitation.newarchitecture.UserViewModel;
+import com.andigeeky.weddinginvitation.newarchitecture.UserViewModelFactory;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -32,12 +39,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findViewById(R.id.btn_register).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        RemoteRepositoryDataStore remoteRepositoryDataStore = new RemoteRepositoryDataStore();
+        RegisterUseCase registerUseCase = new RegisterUseCase(remoteRepositoryDataStore);
+        UserViewModelFactory userViewModelFactory = new UserViewModelFactory(registerUseCase);
+        UserViewModel viewModel = ViewModelProviders.of(this, userViewModelFactory).get(UserViewModel.class);
+
+
+        findViewById(R.id.btn_register).setOnClickListener(view -> {
 //                registerWithCredentials();
-                signIn();
-            }
+//                signIn();
+
+
+            registerWithNewArch(viewModel);
         });
 
         // Configure Google Sign In
@@ -48,6 +61,13 @@ public class MainActivity extends AppCompatActivity {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
+    }
+
+    private void registerWithNewArch(UserViewModel viewModel) {
+        User user = new User();
+        user.setEmail("gelaneeem123@gmail.com");
+        user.setPassword("password");
+        viewModel.registerUser(user);
     }
 
     private void signIn() {

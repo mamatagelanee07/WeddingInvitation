@@ -37,6 +37,11 @@ project.ext {
     firebaseVersion = "11.6.2"
     constraintLayoutVersion = "1.0.2"
     appcompactVersion = "27.0.2"
+    rxJavaVersion = "2.1.0"
+    rxAndroidVersion = "2.0.1"
+    timberVersion = "4.5.1"
+    priorityJobQueueVersion = "2.0.1"
+    rxRelayVersion = "2.0.0"
 }
 
 dependencies {
@@ -54,6 +59,22 @@ dependencies {
     implementation "android.arch.lifecycle:runtime:$project.androidArchVersion"
     implementation "android.arch.lifecycle:extensions:$project.androidArchVersion"
     annotationProcessor "android.arch.lifecycle:compiler:$project.androidArchVersion"
+
+    // ReactiveX
+    implementation "io.reactivex.rxjava2:rxjava:$project.rxJavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$project.rxAndroidVersion"
+
+    // Timber
+    implementation "com.jakewharton.timber:timber:$project.timberVersion"
+
+    // Priority Job Queue
+    implementation "com.birbit:android-priority-jobqueue:$project.priorityJobQueueVersion"
+
+    // RxRelay
+    implementation "com.jakewharton.rxrelay2:rxrelay:$project.rxRelayVersion"
+
+    //GCM Network Manager
+    implementation "com.google.android.gms:play-services-gcm:$project.firebaseVersion"
 
     // Test
     testImplementation "junit:junit:$project.jUnitVesrion"
