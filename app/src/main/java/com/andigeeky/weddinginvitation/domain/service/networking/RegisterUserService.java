@@ -1,6 +1,7 @@
-package com.andigeeky.weddinginvitation.newarchitecture;
+package com.andigeeky.weddinginvitation.domain.service.networking;
 
-import com.andigeeky.weddinginvitation.auth.vo.User;
+import com.andigeeky.weddinginvitation.model.User;
+import com.andigeeky.weddinginvitation.domain.service.RemoteException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;

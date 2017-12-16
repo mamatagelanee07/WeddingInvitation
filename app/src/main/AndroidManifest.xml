@@ -11,14 +11,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:name=".newarchitecture.App"
+        android:name=".WeddingApplication"
         android:theme="@style/AppTheme">
 
-        <service android:name=".newarchitecture.SchedulerJobService"
+        <service android:name=".domain.service.jobs.SchedulerJobService"
                  android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <activity
-            android:name=".SplashScreen"
+            android:name=".view.SplashScreen"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".view.MainActivity"
             android:theme="@style/AppTheme"/>
     </application>
 

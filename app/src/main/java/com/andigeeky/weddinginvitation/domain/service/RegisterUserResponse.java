@@ -1,6 +1,6 @@
-package com.andigeeky.weddinginvitation.newarchitecture;
+package com.andigeeky.weddinginvitation.domain.service;
 
-import com.andigeeky.weddinginvitation.auth.vo.User;
+import com.andigeeky.weddinginvitation.model.User;
 
 public class RegisterUserResponse {
     public final RegisterResponseEventType eventType;

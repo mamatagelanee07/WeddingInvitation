@@ -1,4 +1,4 @@
-package com.andigeeky.weddinginvitation.newarchitecture;
+package com.andigeeky.weddinginvitation.domain.service;
 
 
 public class RemoteException extends Exception {

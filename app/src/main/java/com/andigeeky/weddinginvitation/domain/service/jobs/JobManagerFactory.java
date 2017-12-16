@@ -1,4 +1,4 @@
-package com.andigeeky.weddinginvitation.newarchitecture;
+package com.andigeeky.weddinginvitation.domain.service.jobs;
 
 import android.content.Context;
 import android.os.Build;

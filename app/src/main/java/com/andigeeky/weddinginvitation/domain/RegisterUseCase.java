@@ -1,6 +1,7 @@
-package com.andigeeky.weddinginvitation.newarchitecture;
+package com.andigeeky.weddinginvitation.domain;
 
-import com.andigeeky.weddinginvitation.auth.vo.User;
+import com.andigeeky.weddinginvitation.model.User;
+import com.andigeeky.weddinginvitation.data.RemoteRepositoryDataStore;
 
 import io.reactivex.Completable;
 

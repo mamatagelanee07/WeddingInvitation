@@ -1,16 +1,13 @@
-package com.andigeeky.weddinginvitation.newarchitecture;
+package com.andigeeky.weddinginvitation;
 
 import android.app.Application;
 
-import com.andigeeky.weddinginvitation.BuildConfig;
+import com.andigeeky.weddinginvitation.domain.service.jobs.JobManagerFactory;
 
 import timber.log.Timber;
 
-/**
- * Created by Mamata on 12/16/2017.
- */
 
-public class App extends Application {
+public class WeddingApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();

@@ -1,4 +1,4 @@
-package com.andigeeky.weddinginvitation.newarchitecture;
+package com.andigeeky.weddinginvitation.domain.service.jobs;
 
 public class JobPriority {
     public static final int LOW = 0;

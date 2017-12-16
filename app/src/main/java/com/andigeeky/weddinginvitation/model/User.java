@@ -1,4 +1,4 @@
-package com.andigeeky.weddinginvitation.auth.vo;
+package com.andigeeky.weddinginvitation.model;
 
 
 import java.io.Serializable;

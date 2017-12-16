@@ -1,7 +1,8 @@
-package com.andigeeky.weddinginvitation.newarchitecture;
+package com.andigeeky.weddinginvitation.domain.service.jobs;
 
 import android.support.annotation.NonNull;
 
+import com.andigeeky.weddinginvitation.domain.service.jobs.JobManagerFactory;
 import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.scheduling.FrameworkJobSchedulerService;
 

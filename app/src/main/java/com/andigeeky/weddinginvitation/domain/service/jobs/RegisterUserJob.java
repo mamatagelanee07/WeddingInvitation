@@ -1,9 +1,12 @@
-package com.andigeeky.weddinginvitation.newarchitecture;
+package com.andigeeky.weddinginvitation.domain.service.jobs;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.andigeeky.weddinginvitation.auth.vo.User;
+import com.andigeeky.weddinginvitation.model.User;
+import com.andigeeky.weddinginvitation.domain.service.RegisterResponseEventType;
+import com.andigeeky.weddinginvitation.domain.service.RegisterUserRxBus;
+import com.andigeeky.weddinginvitation.domain.service.networking.RegisterUserService;
 import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.Params;
 import com.birbit.android.jobqueue.RetryConstraint;

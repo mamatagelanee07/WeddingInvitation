@@ -1,7 +1,9 @@
-package com.andigeeky.weddinginvitation.newarchitecture;
+package com.andigeeky.weddinginvitation.presentation;
 
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
+
+import com.andigeeky.weddinginvitation.domain.RegisterUseCase;
 
 public class UserViewModelFactory implements ViewModelProvider.Factory {
 
