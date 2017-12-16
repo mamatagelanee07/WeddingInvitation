@@ -1,6 +1,6 @@
 package com.andigeeky.weddinginvitation.domain.service;
 
-import com.andigeeky.weddinginvitation.model.User;
+import com.google.firebase.auth.FirebaseUser;
 import com.jakewharton.rxrelay2.PublishRelay;
 
 import io.reactivex.Observable;
@@ -21,7 +21,7 @@ public class RegisterUserRxBus {
         relay = PublishRelay.create();
     }
 
-    public void post(RegisterResponseEventType eventType, User user) {
+    public void post(RegisterResponseEventType eventType, FirebaseUser user) {
         relay.accept(new RegisterUserResponse(eventType, user));
     }
 

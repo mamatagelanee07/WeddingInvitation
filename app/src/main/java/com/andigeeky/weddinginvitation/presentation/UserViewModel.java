@@ -2,6 +2,7 @@ package com.andigeeky.weddinginvitation.presentation;
 
 import android.arch.lifecycle.ViewModel;
 
+import com.andigeeky.weddinginvitation.domain.service.RegisterUserRequest;
 import com.andigeeky.weddinginvitation.model.User;
 import com.andigeeky.weddinginvitation.domain.RegisterUseCase;
 
@@ -18,8 +19,8 @@ public class UserViewModel extends ViewModel {
         this.registerUseCase = registerUseCase;
     }
 
-    public void registerUser(User user) {
-        disposables.add(registerUseCase.registerUser(user)
+    public void registerUser(RegisterUserRequest request) {
+        disposables.add(registerUseCase.registerUser(request)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> Timber.d("add comment success"),

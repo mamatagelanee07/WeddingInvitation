@@ -3,50 +3,51 @@ package com.andigeeky.weddinginvitation.domain.service.jobs;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.andigeeky.weddinginvitation.model.User;
 import com.andigeeky.weddinginvitation.domain.service.RegisterResponseEventType;
+import com.andigeeky.weddinginvitation.domain.service.RegisterUserRequest;
 import com.andigeeky.weddinginvitation.domain.service.RegisterUserRxBus;
 import com.andigeeky.weddinginvitation.domain.service.networking.RegisterUserService;
 import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.Params;
 import com.birbit.android.jobqueue.RetryConstraint;
+import com.google.firebase.auth.FirebaseUser;
 
 import timber.log.Timber;
 
 
 public class RegisterUserJob extends Job {
     private static final String TAG = RegisterUserJob.class.getCanonicalName();
-    private final User user;
+    private final RegisterUserRequest request;
 
-    public RegisterUserJob(User user) {
+    public RegisterUserJob(RegisterUserRequest request) {
         super(new Params(JobPriority.MID)
                 .requireNetwork()
                 .groupBy(TAG)
                 .persist());
-        this.user = user;
+        this.request = request;
     }
 
     @Override
     public void onAdded() {
-        Timber.d("Executing onAdded() for user " + user);
+        Timber.d("Executing onAdded() for user " + request);
     }
 
     @Override
     public void onRun() throws Throwable {
-        Timber.d("Executing onRun() for user " + user);
+        Timber.d("Executing onRun() for user " + request);
 
         // if any exception is thrown, it will be handled by shouldReRunOnThrowable()
-        RegisterUserService.getInstance().registerUser(user);
+        FirebaseUser firebaseUser = RegisterUserService.getInstance().registerUser(request);
 
         // remote call was successful--the Comment will be updated locally to reflect that sync is no longer pending
-        RegisterUserRxBus.getInstance().post(RegisterResponseEventType.SUCCESS, user);
+        RegisterUserRxBus.getInstance().post(RegisterResponseEventType.SUCCESS, firebaseUser);
     }
 
     @Override
     protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
         Timber.d("canceling job. reason: %d, throwable: %s", cancelReason, throwable);
         // sync to remote failed
-        RegisterUserRxBus.getInstance().post(RegisterResponseEventType.FAILED, user);
+        RegisterUserRxBus.getInstance().post(RegisterResponseEventType.FAILED, null);
     }
 
     @Override

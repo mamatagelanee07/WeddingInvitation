@@ -1,10 +1,12 @@
 package com.andigeeky.weddinginvitation.domain.service.networking;
 
+import com.andigeeky.weddinginvitation.domain.service.RegisterUserRequest;
 import com.andigeeky.weddinginvitation.model.User;
 import com.andigeeky.weddinginvitation.domain.service.RemoteException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
 
@@ -26,14 +28,15 @@ public class RegisterUserService {
         return instance;
     }
 
-    public void registerUser(User user) throws IOException, RemoteException {
+    public FirebaseUser registerUser(RegisterUserRequest request) throws IOException, RemoteException {
         Task<AuthResult> resultTask = firebaseAuth.createUserWithEmailAndPassword(
-                user.getEmail(), user.getPassword());
+                request.getUser().getEmail(), request.getUser().getPassword());
 
         if (!resultTask.isSuccessful() || resultTask.getResult().getUser() == null) {
             throw new RemoteException();
         }
 
         Timber.d("successful remote response: " + resultTask.getResult().getUser());
+        return resultTask.getResult().getUser();
     }
 }

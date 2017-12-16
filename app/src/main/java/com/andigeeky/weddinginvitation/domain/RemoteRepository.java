@@ -1,9 +1,9 @@
 package com.andigeeky.weddinginvitation.domain;
 
-import com.andigeeky.weddinginvitation.model.User;
+import com.andigeeky.weddinginvitation.domain.service.RegisterUserRequest;
 
 import io.reactivex.Completable;
 
 public interface RemoteRepository {
-    Completable register(User user);
+    Completable register(RegisterUserRequest request);
 }

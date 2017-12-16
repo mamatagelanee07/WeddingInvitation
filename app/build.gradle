@@ -9,6 +9,11 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+    }
+
+    dexOptions {
+        javaMaxHeapSize "2048M"
     }
 
     compileOptions {
@@ -47,12 +52,13 @@ project.ext {
 dependencies {
     implementation "com.android.support:appcompat-v7:$project.appcompactVersion"
     implementation "com.android.support.constraint:constraint-layout:$project.constraintLayoutVersion"
+    implementation "com.android.support:support-annotations:$project.appcompactVersion"
 
     // Firebase
     implementation "com.google.firebase:firebase-core:$project.firebaseVersion"
     implementation "com.google.firebase:firebase-auth:$project.firebaseVersion"
 
-    // Google Sign-In
+    // GOOGLE Sign-In
     implementation "com.google.android.gms:play-services-auth:$project.firebaseVersion"
 
     // Lifecycle
@@ -75,6 +81,9 @@ dependencies {
 
     //GCM Network Manager
     implementation "com.google.android.gms:play-services-gcm:$project.firebaseVersion"
+
+    // Multidex
+    compile "com.android.support:multidex:1.0.2"
 
     // Test
     testImplementation "junit:junit:$project.jUnitVesrion"

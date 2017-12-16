@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.andigeeky.weddinginvitation.R;
 import com.andigeeky.weddinginvitation.data.RemoteRepositoryDataStore;
 import com.andigeeky.weddinginvitation.domain.RegisterUseCase;
+import com.andigeeky.weddinginvitation.domain.service.RegisterUserRequest;
+import com.andigeeky.weddinginvitation.model.AccountType;
 import com.andigeeky.weddinginvitation.model.User;
 import com.andigeeky.weddinginvitation.presentation.UserViewModel;
 import com.andigeeky.weddinginvitation.presentation.UserViewModelFactory;
@@ -31,9 +33,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void registerWithEmailAndPassword(UserViewModel viewModel) {
+        RegisterUserRequest registerUserRequest = new RegisterUserRequest();
+
         User user = new User();
         user.setEmail("gelaneeem123@gmail.com");
         user.setPassword("password");
-        viewModel.registerUser(user);
+
+        registerUserRequest.setAccountType(AccountType.PASSWORD);
+        registerUserRequest.setUser(user);
+
+        viewModel.registerUser(registerUserRequest);
     }
 }
