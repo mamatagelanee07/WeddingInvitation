@@ -33,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private UserViewModel viewModel;
 
-    private RegisterUserLifecycleObserver registerUserLifecycleObserver;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,13 +42,20 @@ public class MainActivity extends AppCompatActivity {
         RegisterUseCase registerUseCase = new RegisterUseCase(remoteRepositoryDataStore);
         UserViewModelFactory userViewModelFactory = new UserViewModelFactory(registerUseCase);
         viewModel = ViewModelProviders.of(this, userViewModelFactory).get(UserViewModel.class);
-        registerUserLifecycleObserver = new RegisterUserLifecycleObserver(viewModel);
+        RegisterUserLifecycleObserver registerUserLifecycleObserver = new RegisterUserLifecycleObserver(viewModel);
         getLifecycle().addObserver(registerUserLifecycleObserver);
 
 
         findViewById(R.id.btn_register).setOnClickListener(view -> {
             registerWithEmailAndPassword(viewModel);
-//            getGoogleCredentials();
+        });
+
+        findViewById(R.id.btn_google).setOnClickListener(view -> {
+            getGoogleCredentials();
+        });
+
+        findViewById(R.id.btn_facebook).setOnClickListener(view -> {
+            getFacebookCredentials();
         });
 
         // Configure Google Sign In
@@ -72,6 +77,10 @@ public class MainActivity extends AppCompatActivity {
                         + registerUserResponse.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void getFacebookCredentials() {
+
     }
 
     private void getGoogleCredentials() {
