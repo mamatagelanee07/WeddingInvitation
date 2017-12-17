@@ -58,7 +58,7 @@ public class SignUpScreen extends AppCompatActivity {
 
 
         findViewById(R.id.btn_register).setOnClickListener(view -> {
-            registerWithEmailAndPassword(viewModel);
+            registerWithEmailAndPassword();
         });
 
         findViewById(R.id.btn_google).setOnClickListener(view -> {
@@ -135,7 +135,7 @@ public class SignUpScreen extends AppCompatActivity {
         }
     }
 
-    private void registerWithEmailAndPassword(UserViewModel viewModel) {
+    private void registerWithEmailAndPassword() {
         RegisterUserRequest registerUserRequest = new RegisterUserRequest();
         User user = new User();
         user.setEmail("gelaneeem123@gmail.com");
