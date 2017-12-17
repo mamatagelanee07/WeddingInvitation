@@ -12,7 +12,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import timber.log.Timber;
 
 /**
- * Updates local database after remote comment sync requests
+ * Observes sign up screen lifecycle
  */
 public class RegisterUserLifecycleObserver implements LifecycleObserver {
     private final CompositeDisposable disposables = new CompositeDisposable();
