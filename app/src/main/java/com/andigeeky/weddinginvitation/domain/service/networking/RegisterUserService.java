@@ -1,17 +1,13 @@
 package com.andigeeky.weddinginvitation.domain.service.networking;
 
+import com.andigeeky.weddinginvitation.domain.service.RegisterResponseEventType;
 import com.andigeeky.weddinginvitation.domain.service.RegisterUserRequest;
+import com.andigeeky.weddinginvitation.domain.service.RegisterUserRxBus;
 import com.andigeeky.weddinginvitation.model.AccountType;
-import com.andigeeky.weddinginvitation.model.User;
-import com.andigeeky.weddinginvitation.domain.service.RemoteException;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import java.io.IOException;
-
-import timber.log.Timber;
 
 public class RegisterUserService {
     private static RegisterUserService instance;
@@ -29,10 +25,22 @@ public class RegisterUserService {
         return instance;
     }
 
-    public FirebaseUser registerUser(RegisterUserRequest request) throws IOException, RemoteException {
+    public void registerUser(RegisterUserRequest request) {
+        Task<AuthResult> resultTask = getAuthResultTask(request);
 
-        Task<AuthResult> resultTask;
+        resultTask.addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                RegisterUserRxBus.getInstance().post(RegisterResponseEventType.SUCCESS,
+                        task.getResult().getUser());
+            } else {
+                RegisterUserRxBus.getInstance().post(RegisterResponseEventType.FAILED,
+                        (FirebaseException) task.getException());
+            }
+        });
+    }
 
+    private Task<AuthResult> getAuthResultTask(RegisterUserRequest request) {
+        Task<AuthResult> resultTask = null;
         switch (request.getAccountType()) {
             case AccountType.PASSWORD:
                 resultTask = firebaseAuth.createUserWithEmailAndPassword(
@@ -43,15 +51,8 @@ public class RegisterUserService {
                 resultTask = firebaseAuth.signInWithCredential(request.getAuthCredential());
                 break;
             default:
-                throw new RemoteException();
+                break;
         }
-
-
-        if (!resultTask.isSuccessful() || resultTask.getResult().getUser() == null) {
-            throw new RemoteException();
-        }
-
-        Timber.d("successful remote response: " + resultTask.getResult().getUser());
-        return resultTask.getResult().getUser();
+        return resultTask;
     }
 }

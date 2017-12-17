@@ -19,8 +19,6 @@ public class UserViewModel extends ViewModel {
 
     public void registerUser(RegisterUserRequest request) {
         registerUseCase.registerUser(request);
-       /* disposables.add(RegisterUserRxBus.getInstance().toObservable()
-                .subscribe(this::handleSyncResponse, t -> Timber.e(t, "error handling sync response")));*/
     }
 
     /**
