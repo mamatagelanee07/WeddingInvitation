@@ -7,11 +7,11 @@ import com.google.firebase.auth.AuthCredential;
 import java.io.Serializable;
 
 public class RegisterUserRequest implements Serializable{
-    public User user;
-    public AuthCredential authCredential;
+    private User user;
+    private AuthCredential authCredential;
 
     @AccountType.IAccountType
-    public int accountType;
+    private int accountType;
 
     public User getUser() {
         return user;

@@ -1,29 +1,36 @@
 package com.andigeeky.weddinginvitation.presentation;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
-import com.andigeeky.weddinginvitation.domain.service.RegisterUserRequest;
-import com.andigeeky.weddinginvitation.model.User;
 import com.andigeeky.weddinginvitation.domain.RegisterUseCase;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
-import timber.log.Timber;
+import com.andigeeky.weddinginvitation.domain.service.RegisterUserRequest;
+import com.andigeeky.weddinginvitation.domain.service.RegisterUserResponse;
 
 public class UserViewModel extends ViewModel {
     private RegisterUseCase registerUseCase;
-    private final CompositeDisposable disposables = new CompositeDisposable();
+    private MutableLiveData<RegisterUserResponse> userLiveData = new MutableLiveData<>();
+
 
     public UserViewModel(RegisterUseCase registerUseCase) {
         this.registerUseCase = registerUseCase;
     }
 
     public void registerUser(RegisterUserRequest request) {
-        disposables.add(registerUseCase.registerUser(request)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> Timber.d("add comment success"),
-                        t -> Timber.e(t, "add comment error")));
+        registerUseCase.registerUser(request);
+       /* disposables.add(RegisterUserRxBus.getInstance().toObservable()
+                .subscribe(this::handleSyncResponse, t -> Timber.e(t, "error handling sync response")));*/
+    }
+
+    /**
+     * Exposes the latest user status so the UI can observe it
+     */
+    public LiveData<RegisterUserResponse> getUser() {
+        return userLiveData;
+    }
+
+    public void updateUser(RegisterUserResponse response) {
+        this.userLiveData.postValue(response);
     }
 }

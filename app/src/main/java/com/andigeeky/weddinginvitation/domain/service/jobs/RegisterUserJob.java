@@ -17,13 +17,12 @@ import timber.log.Timber;
 
 public class RegisterUserJob extends Job {
     private static final String TAG = RegisterUserJob.class.getCanonicalName();
-    private final RegisterUserRequest request;
+    private RegisterUserRequest request;
 
     public RegisterUserJob(RegisterUserRequest request) {
         super(new Params(JobPriority.MID)
                 .requireNetwork()
-                .groupBy(TAG)
-                .persist());
+                .groupBy(TAG));
         this.request = request;
     }
 

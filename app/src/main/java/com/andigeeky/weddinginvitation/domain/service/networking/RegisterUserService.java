@@ -1,6 +1,7 @@
 package com.andigeeky.weddinginvitation.domain.service.networking;
 
 import com.andigeeky.weddinginvitation.domain.service.RegisterUserRequest;
+import com.andigeeky.weddinginvitation.model.AccountType;
 import com.andigeeky.weddinginvitation.model.User;
 import com.andigeeky.weddinginvitation.domain.service.RemoteException;
 import com.google.android.gms.tasks.Task;
@@ -29,8 +30,22 @@ public class RegisterUserService {
     }
 
     public FirebaseUser registerUser(RegisterUserRequest request) throws IOException, RemoteException {
-        Task<AuthResult> resultTask = firebaseAuth.createUserWithEmailAndPassword(
-                request.getUser().getEmail(), request.getUser().getPassword());
+
+        Task<AuthResult> resultTask;
+
+        switch (request.getAccountType()) {
+            case AccountType.PASSWORD:
+                resultTask = firebaseAuth.createUserWithEmailAndPassword(
+                        request.getUser().getEmail(), request.getUser().getPassword());
+                break;
+            case AccountType.GOOGLE:
+            case AccountType.FACEBOOK:
+                resultTask = firebaseAuth.signInWithCredential(request.getAuthCredential());
+                break;
+            default:
+                throw new RemoteException();
+        }
+
 
         if (!resultTask.isSuccessful() || resultTask.getResult().getUser() == null) {
             throw new RemoteException();
