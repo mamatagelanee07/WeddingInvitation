@@ -2,12 +2,8 @@ package com.andigeeky.weddinginvitation.view;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -27,7 +23,6 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -38,14 +33,12 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import timber.log.Timber;
 
-public class MainActivity extends AppCompatActivity {
-    private static final String TAG = MainActivity.class.getSimpleName();
+public class SignUpScreen extends AppCompatActivity {
+    private static final String TAG = SignUpScreen.class.getSimpleName();
     private static final int RC_SIGN_IN = 9001;
     private GoogleSignInClient mGoogleSignInClient;
     private UserViewModel viewModel;
@@ -86,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_facebook).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LoginManager.getInstance().logInWithReadPermissions(MainActivity.this,
+                LoginManager.getInstance().logInWithReadPermissions(SignUpScreen.this,
                         Arrays.asList("public_profile", "email"));
             }
         });
@@ -111,11 +104,11 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel.getUser().observe(this, registerUserResponse -> {
             if (registerUserResponse.getEventType() == RegisterResponseEventType.SUCCESS) {
-                Toast.makeText(MainActivity.this, "User registered: "
+                Toast.makeText(SignUpScreen.this, "User registered: "
                         + registerUserResponse.getEventType() + " : "
                         + registerUserResponse.getUser().getEmail(), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(MainActivity.this, "User registered: "
+                Toast.makeText(SignUpScreen.this, "User registered: "
                         + registerUserResponse.getEventType() + " : "
                         + registerUserResponse.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }

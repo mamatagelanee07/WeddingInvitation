@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.MainActivity"
+            android:name=".view.SignUpScreen"
             android:theme="@style/AppTheme"/>
 
         <!--___________________Facebook declaration starts_____________________-->
