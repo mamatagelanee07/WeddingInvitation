@@ -35,6 +35,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.util.Arrays;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import timber.log.Timber;
 
 public class SignUpScreen extends AppCompatActivity {
@@ -49,22 +51,14 @@ public class SignUpScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ButterKnife.bind(this);
+
         RemoteRepositoryDataStore remoteRepositoryDataStore = new RemoteRepositoryDataStore();
         RegisterUseCase registerUseCase = new RegisterUseCase(remoteRepositoryDataStore);
         UserViewModelFactory userViewModelFactory = new UserViewModelFactory(registerUseCase);
         viewModel = ViewModelProviders.of(this, userViewModelFactory).get(UserViewModel.class);
         RegisterUserLifecycleObserver registerUserLifecycleObserver = new RegisterUserLifecycleObserver(viewModel);
         getLifecycle().addObserver(registerUserLifecycleObserver);
-
-
-        findViewById(R.id.btn_register).setOnClickListener(view -> {
-            registerWithEmailAndPassword();
-        });
-
-        findViewById(R.id.btn_google).setOnClickListener(view -> {
-            getGoogleCredentials();
-        });
-
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -76,13 +70,6 @@ public class SignUpScreen extends AppCompatActivity {
 
         // Initialize Facebook Login button
         callbackManager = CallbackManager.Factory.create();
-        findViewById(R.id.btn_facebook).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LoginManager.getInstance().logInWithReadPermissions(SignUpScreen.this,
-                        Arrays.asList("public_profile", "email"));
-            }
-        });
 
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -115,7 +102,14 @@ public class SignUpScreen extends AppCompatActivity {
         });
     }
 
-    private void getGoogleCredentials() {
+    @OnClick(R.id.btn_facebook)
+    public void getFacebookCredentials() {
+        LoginManager.getInstance().logInWithReadPermissions(SignUpScreen.this,
+                Arrays.asList("public_profile", "email"));
+    }
+
+    @OnClick(R.id.btn_google)
+    public void getGoogleCredentials() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -135,7 +129,8 @@ public class SignUpScreen extends AppCompatActivity {
         }
     }
 
-    private void registerWithEmailAndPassword() {
+    @OnClick(R.id.btn_register)
+    public void registerWithEmailAndPassword() {
         RegisterUserRequest registerUserRequest = new RegisterUserRequest();
         User user = new User();
         user.setEmail("gelaneeem123@gmail.com");
