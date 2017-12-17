@@ -2,8 +2,14 @@ package com.andigeeky.weddinginvitation.view;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
+import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.andigeeky.weddinginvitation.R;
@@ -16,6 +22,12 @@ import com.andigeeky.weddinginvitation.model.AccountType;
 import com.andigeeky.weddinginvitation.model.User;
 import com.andigeeky.weddinginvitation.presentation.UserViewModel;
 import com.andigeeky.weddinginvitation.presentation.UserViewModelFactory;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -23,7 +35,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import timber.log.Timber;
 
@@ -32,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 9001;
     private GoogleSignInClient mGoogleSignInClient;
     private UserViewModel viewModel;
+    private CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +72,6 @@ public class MainActivity extends AppCompatActivity {
             getGoogleCredentials();
         });
 
-        findViewById(R.id.btn_facebook).setOnClickListener(view -> {
-            getFacebookCredentials();
-        });
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -65,6 +80,35 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        // Initialize Facebook Login button
+        callbackManager = CallbackManager.Factory.create();
+        findViewById(R.id.btn_facebook).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LoginManager.getInstance().logInWithReadPermissions(MainActivity.this,
+                        Arrays.asList("public_profile", "email"));
+            }
+        });
+
+        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d(TAG, "facebook:onSuccess:" + loginResult);
+                registerWithFacebook(FacebookAuthProvider
+                        .getCredential(loginResult.getAccessToken().getToken()));
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d(TAG, "facebook:onCancel");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.d(TAG, "facebook:onError", error);
+            }
+        });
 
         viewModel.getUser().observe(this, registerUserResponse -> {
             if (registerUserResponse.getEventType() == RegisterResponseEventType.SUCCESS) {
@@ -79,10 +123,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void getFacebookCredentials() {
-
-    }
-
     private void getGoogleCredentials() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -91,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        callbackManager.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
@@ -103,6 +143,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void registerWithEmailAndPassword(UserViewModel viewModel) {
+        RegisterUserRequest registerUserRequest = new RegisterUserRequest();
+        User user = new User();
+        user.setEmail("gelaneeem123@gmail.com");
+        user.setPassword("password");
+        registerUserRequest.setAccountType(AccountType.PASSWORD);
+        registerUserRequest.setUser(user);
+        viewModel.registerUser(registerUserRequest);
+    }
+
     private void registerWithGoogle(UserViewModel viewModel, GoogleSignInAccount account) {
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         RegisterUserRequest registerUserRequest = new RegisterUserRequest();
@@ -111,17 +161,10 @@ public class MainActivity extends AppCompatActivity {
         viewModel.registerUser(registerUserRequest);
     }
 
-
-    private void registerWithEmailAndPassword(UserViewModel viewModel) {
+    private void registerWithFacebook(AuthCredential authCredential) {
         RegisterUserRequest registerUserRequest = new RegisterUserRequest();
-
-        User user = new User();
-        user.setEmail("gelaneeem123@gmail.com");
-        user.setPassword("password");
-
-        registerUserRequest.setAccountType(AccountType.PASSWORD);
-        registerUserRequest.setUser(user);
-
+        registerUserRequest.setAccountType(AccountType.FACEBOOK);
+        registerUserRequest.setAuthCredential(authCredential);
         viewModel.registerUser(registerUserRequest);
     }
 }

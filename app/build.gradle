@@ -47,6 +47,7 @@ project.ext {
     timberVersion = "4.5.1"
     priorityJobQueueVersion = "2.0.1"
     rxRelayVersion = "2.0.0"
+    facebookVersion = "[4,5)"
 }
 
 dependencies {
@@ -60,6 +61,9 @@ dependencies {
 
     // GOOGLE Sign-In
     implementation "com.google.android.gms:play-services-auth:$project.firebaseVersion"
+
+    // Facebook Sign-In
+    implementation "com.facebook.android:facebook-android-sdk:$project.facebookVersion"
 
     // Lifecycle
     implementation "android.arch.lifecycle:runtime:$project.androidArchVersion"
