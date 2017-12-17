@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.andigeeky.weddinginvitation.R;
+import com.andigeeky.weddinginvitation.common.FacebookLoginHelper;
+import com.andigeeky.weddinginvitation.common.GoogleLoginHelper;
 import com.andigeeky.weddinginvitation.data.RemoteRepositoryDataStore;
 import com.andigeeky.weddinginvitation.domain.RegisterUseCase;
 import com.andigeeky.weddinginvitation.domain.service.RegisterResponseEventType;
@@ -41,10 +43,9 @@ import timber.log.Timber;
 
 public class SignUpScreen extends AppCompatActivity {
     private static final String TAG = SignUpScreen.class.getSimpleName();
-    private static final int RC_SIGN_IN = 9001;
-    private GoogleSignInClient mGoogleSignInClient;
     private UserViewModel viewModel;
-    private CallbackManager callbackManager;
+    private GoogleLoginHelper googleLoginHelper;
+    private FacebookLoginHelper facebookLoginHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,33 +61,10 @@ public class SignUpScreen extends AppCompatActivity {
         RegisterUserLifecycleObserver registerUserLifecycleObserver = new RegisterUserLifecycleObserver(viewModel);
         getLifecycle().addObserver(registerUserLifecycleObserver);
 
-        // Configure Google Sign In
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        // Initialize Facebook Login button
-        callbackManager = CallbackManager.Factory.create();
-
-        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Log.d(TAG, "facebook:onSuccess:" + loginResult);
-                registerWithFacebook(loginResult.getAccessToken().getToken());
-            }
-
-            @Override
-            public void onCancel() {
-                Log.d(TAG, "facebook:onCancel");
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.d(TAG, "facebook:onError", error);
-            }
+        googleLoginHelper = new GoogleLoginHelper(this);
+        facebookLoginHelper = new FacebookLoginHelper(this, facebookCredentials -> {
+            if (facebookCredentials != null)
+                registerWithFacebook(facebookCredentials);
         });
 
         viewModel.getUser().observe(this, registerUserResponse -> {
@@ -104,28 +82,22 @@ public class SignUpScreen extends AppCompatActivity {
 
     @OnClick(R.id.btn_facebook)
     public void getFacebookCredentials() {
-        LoginManager.getInstance().logInWithReadPermissions(SignUpScreen.this,
-                Arrays.asList("public_profile", "email"));
+        facebookLoginHelper.getFacebookCredentials();
     }
 
     @OnClick(R.id.btn_google)
     public void getGoogleCredentials() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        googleLoginHelper.getGoogleCredentials();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                registerWithGoogle(account);
-            } catch (ApiException e) {
-                Timber.d("Google sign in failed", e);
-            }
+        facebookLoginHelper.onLoginResult(requestCode, resultCode, data);
+
+        GoogleSignInAccount googleSignInAccount = googleLoginHelper.onLoginResult(requestCode, resultCode, data);
+        if (googleSignInAccount != null) {
+            registerWithGoogle(googleSignInAccount);
         }
     }
 
