@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.andigeeky.weddinginvitation.R;
 import com.andigeeky.weddinginvitation.data.RemoteRepositoryDataStore;
 import com.andigeeky.weddinginvitation.domain.RegisterUseCase;
+import com.andigeeky.weddinginvitation.domain.service.RegisterResponseEventType;
 import com.andigeeky.weddinginvitation.domain.service.RegisterUserLifecycleObserver;
 import com.andigeeky.weddinginvitation.domain.service.RegisterUserRequest;
 import com.andigeeky.weddinginvitation.model.AccountType;
@@ -48,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         findViewById(R.id.btn_register).setOnClickListener(view -> {
-//            registerWithEmailAndPassword(viewModel);
-            getGoogleCredentials();
+            registerWithEmailAndPassword(viewModel);
+//            getGoogleCredentials();
         });
 
         // Configure Google Sign In
@@ -60,8 +61,17 @@ public class MainActivity extends AppCompatActivity {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        viewModel.getUser().observe(this, registerUserResponse -> Toast.makeText(MainActivity.this, "User registered: "
-                + registerUserResponse.eventType, Toast.LENGTH_SHORT).show());
+        viewModel.getUser().observe(this, registerUserResponse -> {
+            if (registerUserResponse.getEventType() == RegisterResponseEventType.SUCCESS) {
+                Toast.makeText(MainActivity.this, "User registered: "
+                        + registerUserResponse.getEventType() + " : "
+                        + registerUserResponse.getUser().getEmail(), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(MainActivity.this, "User registered: "
+                        + registerUserResponse.getEventType() + " : "
+                        + registerUserResponse.getException().getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void getGoogleCredentials() {
