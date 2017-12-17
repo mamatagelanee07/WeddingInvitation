@@ -95,8 +95,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
-                registerWithFacebook(FacebookAuthProvider
-                        .getCredential(loginResult.getAccessToken().getToken()));
+                registerWithFacebook(loginResult.getAccessToken().getToken());
             }
 
             @Override
@@ -136,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                registerWithGoogle(viewModel, account);
+                registerWithGoogle(account);
             } catch (ApiException e) {
                 Timber.d("Google sign in failed", e);
             }
@@ -153,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         viewModel.registerUser(registerUserRequest);
     }
 
-    private void registerWithGoogle(UserViewModel viewModel, GoogleSignInAccount account) {
+    private void registerWithGoogle(GoogleSignInAccount account) {
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         RegisterUserRequest registerUserRequest = new RegisterUserRequest();
         registerUserRequest.setAccountType(AccountType.GOOGLE);
@@ -161,7 +160,8 @@ public class MainActivity extends AppCompatActivity {
         viewModel.registerUser(registerUserRequest);
     }
 
-    private void registerWithFacebook(AuthCredential authCredential) {
+    private void registerWithFacebook(String facebookCredentials) {
+        AuthCredential authCredential = FacebookAuthProvider.getCredential(facebookCredentials);
         RegisterUserRequest registerUserRequest = new RegisterUserRequest();
         registerUserRequest.setAccountType(AccountType.FACEBOOK);
         registerUserRequest.setAuthCredential(authCredential);
