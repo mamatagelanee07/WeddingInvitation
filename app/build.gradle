@@ -47,7 +47,7 @@ project.ext {
     timberVersion = "4.5.1"
     priorityJobQueueVersion = "2.0.1"
     rxRelayVersion = "2.0.0"
-    facebookVersion = "[4,5)"
+    facebookVersion = "4.29.0"
     butterKnifeVersion = "8.7.0"
 }
 
