@@ -1,16 +1,19 @@
 package com.andigeeky.weddinginvitation.domain;
 
+import android.arch.lifecycle.MutableLiveData;
+
 import com.andigeeky.weddinginvitation.data.RemoteRepositoryDataStore;
 import com.andigeeky.weddinginvitation.domain.service.RegisterUserRequest;
+import com.andigeeky.weddinginvitation.domain.service.RegisterUserResponse;
 
 public class RegisterUseCase {
-    private RemoteRepositoryDataStore remoteRepositoryDataStore;
+    private RemoteRepository remoteRepositoryDataStore;
 
-    public RegisterUseCase(RemoteRepositoryDataStore remoteRepositoryDataStore) {
+    public RegisterUseCase(RemoteRepository remoteRepositoryDataStore) {
         this.remoteRepositoryDataStore = remoteRepositoryDataStore;
     }
 
-    public void registerUser(RegisterUserRequest request) {
-        remoteRepositoryDataStore.register(request);
+    public MutableLiveData<RegisterUserResponse> registerUser(RegisterUserRequest request) {
+        return remoteRepositoryDataStore.register(request);
     }
 }

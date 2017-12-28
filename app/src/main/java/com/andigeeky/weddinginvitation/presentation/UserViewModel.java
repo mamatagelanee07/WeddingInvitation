@@ -1,8 +1,11 @@
 package com.andigeeky.weddinginvitation.presentation;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.Nullable;
 
 import com.andigeeky.weddinginvitation.domain.RegisterUseCase;
 import com.andigeeky.weddinginvitation.domain.service.RegisterUserRequest;
@@ -10,7 +13,7 @@ import com.andigeeky.weddinginvitation.domain.service.RegisterUserResponse;
 
 public class UserViewModel extends ViewModel {
     private RegisterUseCase registerUseCase;
-    private MutableLiveData<RegisterUserResponse> userLiveData = new MutableLiveData<>();
+    private MediatorLiveData<RegisterUserResponse> userLiveData = new MediatorLiveData<>();
 
 
     public UserViewModel(RegisterUseCase registerUseCase) {
@@ -18,7 +21,11 @@ public class UserViewModel extends ViewModel {
     }
 
     public void registerUser(RegisterUserRequest request) {
-        registerUseCase.registerUser(request);
+        MutableLiveData<RegisterUserResponse> response = registerUseCase.registerUser(request);
+        userLiveData.addSource(response, registerUserResponse -> {
+            userLiveData.postValue(registerUserResponse);
+            userLiveData.removeSource(response);
+        });
     }
 
     /**
@@ -26,9 +33,5 @@ public class UserViewModel extends ViewModel {
      */
     public LiveData<RegisterUserResponse> getUser() {
         return userLiveData;
-    }
-
-    public void updateUser(RegisterUserResponse response) {
-        this.userLiveData.postValue(response);
     }
 }
