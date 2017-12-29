@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package com.andigeeky.weddinginvitation.temp;
+package com.andigeeky.weddinginvitation.domain.service.networking.common;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
 import com.google.android.gms.tasks.Task;

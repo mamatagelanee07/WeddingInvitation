@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.andigeeky.weddinginvitation.temp;
+package com.andigeeky.weddinginvitation.domain.service.networking.common;
 
 import android.os.Handler;
 import android.os.Looper;

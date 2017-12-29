@@ -6,9 +6,9 @@ import android.support.annotation.NonNull;
 
 import com.andigeeky.weddinginvitation.domain.service.RegisterUserRequest;
 import com.andigeeky.weddinginvitation.model.AccountType;
-import com.andigeeky.weddinginvitation.temp.InstantAppExecutors;
-import com.andigeeky.weddinginvitation.temp.NetworkBoundResource;
-import com.andigeeky.weddinginvitation.temp.Resource;
+import com.andigeeky.weddinginvitation.domain.service.networking.common.InstantAppExecutors;
+import com.andigeeky.weddinginvitation.domain.service.networking.common.NetworkBoundResource;
+import com.andigeeky.weddinginvitation.domain.service.networking.common.Resource;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;

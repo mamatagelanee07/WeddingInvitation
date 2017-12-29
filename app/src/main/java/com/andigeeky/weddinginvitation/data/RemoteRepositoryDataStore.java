@@ -5,7 +5,7 @@ import android.arch.lifecycle.LiveData;
 import com.andigeeky.weddinginvitation.domain.RemoteRepository;
 import com.andigeeky.weddinginvitation.domain.service.RegisterUserRequest;
 import com.andigeeky.weddinginvitation.domain.service.networking.RegisterUserService;
-import com.andigeeky.weddinginvitation.temp.Resource;
+import com.andigeeky.weddinginvitation.domain.service.networking.common.Resource;
 import com.google.firebase.auth.AuthResult;
 
 public class RemoteRepositoryDataStore implements RemoteRepository {

@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 
-package com.andigeeky.weddinginvitation.temp;
+package com.andigeeky.weddinginvitation.domain.service.networking.common;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-import static com.andigeeky.weddinginvitation.temp.Status.ERROR;
-import static com.andigeeky.weddinginvitation.temp.Status.LOADING;
-import static com.andigeeky.weddinginvitation.temp.Status.SUCCESS;
 
 /**
  * A generic class that holds a value with its loading status.
@@ -45,15 +41,15 @@ public class Resource<T> {
     }
 
     public static <T> Resource<T> success(@Nullable T data) {
-        return new Resource<>(SUCCESS, data, null);
+        return new Resource<>(Status.SUCCESS, data, null);
     }
 
     public static <T> Resource<T> error(String msg, @Nullable T data) {
-        return new Resource<>(ERROR, data, msg);
+        return new Resource<>(Status.ERROR, data, msg);
     }
 
     public static <T> Resource<T> loading(@Nullable T data) {
-        return new Resource<>(LOADING, data, null);
+        return new Resource<>(Status.LOADING, data, null);
     }
 
     @Override

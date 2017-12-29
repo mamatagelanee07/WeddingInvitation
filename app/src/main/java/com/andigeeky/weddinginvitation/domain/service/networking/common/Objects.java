@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package com.andigeeky.weddinginvitation.temp;
+package com.andigeeky.weddinginvitation.domain.service.networking.common;
 
-/**
- * Status of a resource that is provided to the UI.
- * <p>
- * These are usually created by the Repository classes where they return
- * {@code LiveData<Resource<T>>} to pass back the latest data to the UI with its fetch status.
- */
-public enum Status {
-    SUCCESS,
-    ERROR,
-    LOADING
+public class Objects {
+    public static boolean equals(Object o1, Object o2) {
+        if (o1 == null) {
+            return o2 == null;
+        }
+        if (o2 == null) {
+            return false;
+        }
+        return o1.equals(o2);
+    }
 }
