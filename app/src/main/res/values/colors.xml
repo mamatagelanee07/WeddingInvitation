@@ -6,4 +6,5 @@
     <color name="color_shadow_accent">#ff4064</color>
     <color name="color_shadow_sign_up_start">#DD083b66</color>
     <color name="color_shadow_sign_up_end">#DD083b66</color>
+    <color name="color_main">#083b66</color>
 </resources>
