@@ -5,11 +5,10 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import com.andigeeky.weddinginvitation.domain.service.RegisterUserRequest;
-import com.andigeeky.weddinginvitation.model.AccountType;
 import com.andigeeky.weddinginvitation.domain.service.networking.common.InstantAppExecutors;
 import com.andigeeky.weddinginvitation.domain.service.networking.common.NetworkBoundResource;
 import com.andigeeky.weddinginvitation.domain.service.networking.common.Resource;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.andigeeky.weddinginvitation.model.AccountType;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,16 +51,11 @@ public class RegisterUserService {
             case AccountType.FACEBOOK:
                 resultTask = firebaseAuth.signInWithCredential(request.getAuthCredential());
                 break;
-            default:
-                break;
         }
 
-        resultTask.addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                liveTask.postValue(task);
-            }
-        });
+        if (resultTask != null) {
+            resultTask.addOnCompleteListener(liveTask::postValue);
+        }
 
         return liveTask;
     }
