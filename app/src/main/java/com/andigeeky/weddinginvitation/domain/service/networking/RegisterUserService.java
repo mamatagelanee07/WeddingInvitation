@@ -1,11 +1,19 @@
 package com.andigeeky.weddinginvitation.domain.service.networking;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Transformations;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.andigeeky.weddinginvitation.domain.service.RegisterResponseEventType;
 import com.andigeeky.weddinginvitation.domain.service.RegisterUserRequest;
 import com.andigeeky.weddinginvitation.domain.service.RegisterUserResponse;
 import com.andigeeky.weddinginvitation.model.AccountType;
+import com.andigeeky.weddinginvitation.temp.InstantAppExecutors;
+import com.andigeeky.weddinginvitation.temp.NetworkBoundResource;
+import com.andigeeky.weddinginvitation.temp.Resource;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
@@ -27,8 +35,8 @@ public class RegisterUserService {
         return instance;
     }
 
-    public MutableLiveData<RegisterUserResponse> registerUser(RegisterUserRequest request) {
-        Task<AuthResult> resultTask = getAuthResultTask(request);
+    public LiveData<Resource<AuthResult>> registerUser(RegisterUserRequest request) {
+       /* Task<AuthResult> resultTask = getAuthResultTask(request);
         MutableLiveData<RegisterUserResponse> response = new MutableLiveData<>();
 
         resultTask.addOnCompleteListener(task -> {
@@ -40,10 +48,18 @@ public class RegisterUserService {
                         (FirebaseException) task.getException()));
             }
         });
-        return response;
+        return response;*/
+        return new NetworkBoundResource<AuthResult>(new InstantAppExecutors()) {
+            @NonNull
+            @Override
+            protected LiveData<Task<AuthResult>> createCall() {
+                return getAuthResultTask(request);
+            }
+        }.asLiveData();
     }
 
-    private Task<AuthResult> getAuthResultTask(RegisterUserRequest request) {
+    private LiveData<Task<AuthResult>> getAuthResultTask(RegisterUserRequest request) {
+        MutableLiveData<Task<AuthResult>> liveTask = new MutableLiveData<>();
         Task<AuthResult> resultTask = null;
         switch (request.getAccountType()) {
             case AccountType.PASSWORD:
@@ -57,6 +73,14 @@ public class RegisterUserService {
             default:
                 break;
         }
-        return resultTask;
+
+        resultTask.addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                liveTask.postValue(task);
+            }
+        });
+
+        return liveTask;
     }
 }

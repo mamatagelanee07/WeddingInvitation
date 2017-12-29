@@ -1,9 +1,11 @@
 package com.andigeeky.weddinginvitation.view;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.andigeeky.weddinginvitation.R;
@@ -14,9 +16,12 @@ import com.andigeeky.weddinginvitation.domain.service.RegisterResponseEventType;
 import com.andigeeky.weddinginvitation.domain.service.RegisterUserResponse;
 import com.andigeeky.weddinginvitation.presentation.UserViewModel;
 import com.andigeeky.weddinginvitation.presentation.UserViewModelFactory;
+import com.andigeeky.weddinginvitation.temp.Resource;
+import com.andigeeky.weddinginvitation.temp.Status;
 import com.facebook.FacebookException;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
 
@@ -29,7 +34,7 @@ import dagger.android.AndroidInjection;
 
 public class SignUpScreen extends AppCompatActivity {
     private static final String TAG = SignUpScreen.class.getSimpleName();
-
+    ProgressDialog progress;
     @BindView(R.id.btn_register)
     public Button btnEmailSignUp;
 
@@ -62,21 +67,30 @@ public class SignUpScreen extends AppCompatActivity {
             }
         });
 
-        RegisterUserResponse response = viewModel.getUser().getValue();
-        if (response != null && response.getUser() != null) {
-            btnEmailSignUp.setEnabled(false);
-            Toast.makeText(this, "User is already logged in!!", Toast.LENGTH_SHORT).show();
-        }
+        Resource<AuthResult> response = viewModel.getUser().getValue();
 
-        viewModel.getUser().observe(this, registerUserResponse -> {
-            if (registerUserResponse.getEventType() == RegisterResponseEventType.SUCCESS) {
-                Toast.makeText(SignUpScreen.this, "User registered: "
-                        + registerUserResponse.getEventType() + " : "
-                        + registerUserResponse.getUser().getEmail(), Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(SignUpScreen.this, "User registered: "
-                        + registerUserResponse.getEventType() + " : "
-                        + registerUserResponse.getException().getMessage(), Toast.LENGTH_SHORT).show();
+        if (response != null) {
+            if (response.status == Status.SUCCESS && response.data.getUser() != null) {
+                btnEmailSignUp.setEnabled(false);
+                Toast.makeText(this, "User is already logged in!!", Toast.LENGTH_SHORT).show();
+            }
+        }
+        viewModel.getUser().observe(this, result -> {
+
+            switch (result.status) {
+                case LOADING:
+                    showProgressBar();
+                    break;
+                case SUCCESS:
+                    dismissProgressBar();
+                    Toast.makeText(SignUpScreen.this, "User registered: SUCCESS   -------"
+                            + result.data.getUser().getEmail(), Toast.LENGTH_SHORT).show();
+                    break;
+                case ERROR:
+                    dismissProgressBar();
+                    Toast.makeText(SignUpScreen.this, "User registered: FAILED  -------"
+                            + result.message, Toast.LENGTH_SHORT).show();
+                    break;
             }
         });
     }
@@ -115,5 +129,17 @@ public class SignUpScreen extends AppCompatActivity {
     private void registerWithFacebook(String facebookCredentials) {
         AuthCredential authCredential = FacebookAuthProvider.getCredential(facebookCredentials);
         viewModel.registerUser(RegisterRequestMapper.registerWithFacebook(authCredential));
+    }
+
+    public void showProgressBar() {
+        progress = new ProgressDialog(this);
+        progress.setMessage("loading...");
+        progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
+        progress.show();
+    }
+
+    public void dismissProgressBar() {
+        if (progress != null && progress.isShowing())
+            progress.dismiss();
     }
 }

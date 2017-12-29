@@ -10,28 +10,31 @@ import android.support.annotation.Nullable;
 import com.andigeeky.weddinginvitation.domain.RegisterUseCase;
 import com.andigeeky.weddinginvitation.domain.service.RegisterUserRequest;
 import com.andigeeky.weddinginvitation.domain.service.RegisterUserResponse;
+import com.andigeeky.weddinginvitation.temp.Resource;
+import com.google.firebase.auth.AuthResult;
 
 public class UserViewModel extends ViewModel {
     private RegisterUseCase registerUseCase;
-    private MediatorLiveData<RegisterUserResponse> userLiveData = new MediatorLiveData<>();
+    private MediatorLiveData<Resource<AuthResult>> mediatorLiveData = new MediatorLiveData<>();
 
-
-    public UserViewModel(RegisterUseCase registerUseCase) {
+    UserViewModel(RegisterUseCase registerUseCase) {
         this.registerUseCase = registerUseCase;
     }
 
     public void registerUser(RegisterUserRequest request) {
-        MutableLiveData<RegisterUserResponse> response = registerUseCase.registerUser(request);
-        userLiveData.addSource(response, registerUserResponse -> {
-            userLiveData.postValue(registerUserResponse);
-            userLiveData.removeSource(response);
+        LiveData<Resource<AuthResult>> resourceLiveData = registerUseCase.registerUser(request);
+        this.mediatorLiveData.addSource(resourceLiveData, new Observer<Resource<AuthResult>>() {
+            @Override
+            public void onChanged(@Nullable Resource<AuthResult> authResultResource) {
+                mediatorLiveData.setValue(authResultResource);
+            }
         });
     }
 
     /**
      * Exposes the latest user status so the UI can observe it
      */
-    public LiveData<RegisterUserResponse> getUser() {
-        return userLiveData;
+    public LiveData<Resource<AuthResult>> getUser() {
+        return mediatorLiveData;
     }
 }

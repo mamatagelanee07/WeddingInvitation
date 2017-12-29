@@ -3,4 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="color_shadow_accent">#ff4064</color>
+    <color name="color_shadow_sign_up_start">#DD083b66</color>
+    <color name="color_shadow_sign_up_end">#DD083b66</color>
 </resources>
