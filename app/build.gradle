@@ -74,15 +74,8 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$project.androidArchVersion"
     annotationProcessor "android.arch.lifecycle:compiler:$project.androidArchVersion"
 
-    // ReactiveX
-    implementation "io.reactivex.rxjava2:rxjava:$project.rxJavaVersion"
-    implementation "io.reactivex.rxjava2:rxandroid:$project.rxAndroidVersion"
-
     // Timber
     implementation "com.jakewharton.timber:timber:$project.timberVersion"
-
-    // RxRelay
-    implementation "com.jakewharton.rxrelay2:rxrelay:$project.rxRelayVersion"
 
     // ButterKnife
     implementation "com.jakewharton:butterknife:$project.butterKnifeVersion"
