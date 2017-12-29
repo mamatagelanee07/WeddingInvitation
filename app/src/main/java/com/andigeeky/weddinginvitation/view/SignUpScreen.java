@@ -3,7 +3,6 @@ package com.andigeeky.weddinginvitation.view;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -11,10 +10,10 @@ import com.andigeeky.weddinginvitation.R;
 import com.andigeeky.weddinginvitation.common.FacebookLoginHelper;
 import com.andigeeky.weddinginvitation.common.GoogleLoginHelper;
 import com.andigeeky.weddinginvitation.common.utility.RegisterRequestMapper;
-import com.andigeeky.weddinginvitation.presentation.UserViewModel;
-import com.andigeeky.weddinginvitation.presentation.UserViewModelFactory;
 import com.andigeeky.weddinginvitation.domain.service.networking.common.Resource;
 import com.andigeeky.weddinginvitation.domain.service.networking.common.Status;
+import com.andigeeky.weddinginvitation.presentation.UserViewModel;
+import com.andigeeky.weddinginvitation.presentation.UserViewModelFactory;
 import com.facebook.FacebookException;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.AuthCredential;
@@ -29,7 +28,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import dagger.android.AndroidInjection;
 
-public class SignUpScreen extends AppCompatActivity {
+public class SignUpScreen extends BaseActivity {
     private static final String TAG = SignUpScreen.class.getSimpleName();
     ProgressDialog progress;
     @BindView(R.id.btn_register)
@@ -45,7 +44,7 @@ public class SignUpScreen extends AppCompatActivity {
     UserViewModel viewModel;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
@@ -76,15 +75,15 @@ public class SignUpScreen extends AppCompatActivity {
 
             switch (result.status) {
                 case LOADING:
-                    showProgressBar();
+                    startLoading();
                     break;
                 case SUCCESS:
-                    dismissProgressBar();
+                    stopLoading();
                     Toast.makeText(SignUpScreen.this, "User registered: SUCCESS   -------"
                             + result.data.getUser().getEmail(), Toast.LENGTH_SHORT).show();
                     break;
                 case ERROR:
-                    dismissProgressBar();
+                    stopLoading();
                     Toast.makeText(SignUpScreen.this, "User registered: FAILED  -------"
                             + result.message, Toast.LENGTH_SHORT).show();
                     break;
@@ -128,15 +127,4 @@ public class SignUpScreen extends AppCompatActivity {
         viewModel.registerUser(RegisterRequestMapper.registerWithFacebook(authCredential));
     }
 
-    public void showProgressBar() {
-        progress = new ProgressDialog(this);
-        progress.setMessage("loading...");
-        progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
-        progress.show();
-    }
-
-    public void dismissProgressBar() {
-        if (progress != null && progress.isShowing())
-            progress.dismiss();
-    }
 }

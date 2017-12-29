@@ -20,4 +20,9 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="LoadingDialog" parent="android:Theme.DeviceDefault.Light.Dialog">
+        <item name="DialogSpotColor">@color/color_shadow_accent</item>
+        <item name="DialogSpotCount">5</item>
+    </style>
+
 </resources>
