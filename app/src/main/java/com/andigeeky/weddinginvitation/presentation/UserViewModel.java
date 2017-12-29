@@ -2,14 +2,12 @@ package com.andigeeky.weddinginvitation.presentation;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.Nullable;
 
 import com.andigeeky.weddinginvitation.domain.RegisterUseCase;
 import com.andigeeky.weddinginvitation.domain.service.RegisterUserRequest;
-import com.andigeeky.weddinginvitation.domain.service.RegisterUserResponse;
 import com.andigeeky.weddinginvitation.temp.Resource;
 import com.google.firebase.auth.AuthResult;
 

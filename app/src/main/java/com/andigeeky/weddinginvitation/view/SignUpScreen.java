@@ -5,15 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.andigeeky.weddinginvitation.R;
 import com.andigeeky.weddinginvitation.common.FacebookLoginHelper;
 import com.andigeeky.weddinginvitation.common.GoogleLoginHelper;
 import com.andigeeky.weddinginvitation.common.utility.RegisterRequestMapper;
-import com.andigeeky.weddinginvitation.domain.service.RegisterResponseEventType;
-import com.andigeeky.weddinginvitation.domain.service.RegisterUserResponse;
 import com.andigeeky.weddinginvitation.presentation.UserViewModel;
 import com.andigeeky.weddinginvitation.presentation.UserViewModelFactory;
 import com.andigeeky.weddinginvitation.temp.Resource;

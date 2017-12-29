@@ -39,7 +39,7 @@ project.ext {
     jUnitVesrion = "4.12"
     testRunnerVersion = "1.0.1"
     espressoVersion = "3.0.1"
-    firebaseVersion = "11.6.2"
+    firebaseVersion = "11.8.0"
     constraintLayoutVersion = "1.0.2"
     appcompactVersion = "27.0.2"
     rxJavaVersion = "2.1.0"
@@ -49,16 +49,19 @@ project.ext {
     rxRelayVersion = "2.0.0"
     facebookVersion = "4.29.0"
     butterKnifeVersion = "8.7.0"
+    daggerVersion = "2.11"
 }
 
 dependencies {
     implementation "com.android.support:appcompat-v7:$project.appcompactVersion"
     implementation "com.android.support.constraint:constraint-layout:$project.constraintLayoutVersion"
     implementation "com.android.support:support-annotations:$project.appcompactVersion"
+    implementation "com.android.support:design:$project.appcompactVersion"
 
     // Firebase
     implementation "com.google.firebase:firebase-core:$project.firebaseVersion"
     implementation "com.google.firebase:firebase-auth:$project.firebaseVersion"
+    implementation "com.google.firebase:firebase-storage:$project.firebaseVersion"
 
     // GOOGLE Sign-In
     implementation "com.google.android.gms:play-services-auth:$project.firebaseVersion"
@@ -87,6 +90,14 @@ dependencies {
 
     // Multidex
     compile "com.android.support:multidex:1.0.2"
+
+    // Dagger core
+    annotationProcessor "com.google.dagger:dagger-compiler:$project.daggerVersion"
+    implementation "com.google.dagger:dagger:$project.daggerVersion"
+
+    // Dagger Android
+    annotationProcessor "com.google.dagger:dagger-android-processor:$project.daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$project.daggerVersion"
 
     // Test
     testImplementation "junit:junit:$project.jUnitVesrion"
