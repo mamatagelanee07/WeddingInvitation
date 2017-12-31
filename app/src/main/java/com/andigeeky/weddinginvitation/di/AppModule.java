@@ -3,8 +3,8 @@ package com.andigeeky.weddinginvitation.di;
 import android.content.Context;
 
 import com.andigeeky.weddinginvitation.WeddingApplication;
-import com.andigeeky.weddinginvitation.data.RemoteRepositoryDataStore;
-import com.andigeeky.weddinginvitation.data.RemoteRepository;
+import com.andigeeky.weddinginvitation.repository.RemoteRepositoryDataStore;
+import com.andigeeky.weddinginvitation.repository.RemoteRepository;
 
 import javax.inject.Singleton;
 

@@ -5,7 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import com.andigeeky.weddinginvitation.common.FacebookLoginHelper;
 import com.andigeeky.weddinginvitation.common.GoogleLoginHelper;
 import com.andigeeky.weddinginvitation.domain.RegisterUseCase;
-import com.andigeeky.weddinginvitation.data.RemoteRepository;
+import com.andigeeky.weddinginvitation.repository.RemoteRepository;
 import com.andigeeky.weddinginvitation.presentation.UserViewModel;
 import com.andigeeky.weddinginvitation.presentation.UserViewModelFactory;
 import com.andigeeky.weddinginvitation.view.SignUpScreen;

@@ -1,4 +1,4 @@
-package com.andigeeky.weddinginvitation.data;
+package com.andigeeky.weddinginvitation.repository;
 
 import android.arch.lifecycle.LiveData;
 
