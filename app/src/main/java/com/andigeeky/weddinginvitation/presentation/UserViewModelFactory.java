@@ -17,8 +17,8 @@ public class UserViewModelFactory implements ViewModelProvider.Factory {
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(UserViewModel.class)) {
-            return (T) new UserViewModel(registerUseCase);
+        if (modelClass.isAssignableFrom(SignViewModel.class)) {
+            return (T) new SignViewModel(registerUseCase);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }

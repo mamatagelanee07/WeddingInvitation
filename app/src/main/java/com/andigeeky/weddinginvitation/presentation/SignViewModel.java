@@ -11,11 +11,11 @@ import com.andigeeky.weddinginvitation.domain.service.RegisterUserRequest;
 import com.andigeeky.weddinginvitation.domain.service.networking.common.Resource;
 import com.google.firebase.auth.AuthResult;
 
-public class UserViewModel extends ViewModel {
+public class SignViewModel extends ViewModel {
     private RegisterUseCase registerUseCase;
     private MediatorLiveData<Resource<AuthResult>> mediatorLiveData = new MediatorLiveData<>();
 
-    UserViewModel(RegisterUseCase registerUseCase) {
+    SignViewModel(RegisterUseCase registerUseCase) {
         this.registerUseCase = registerUseCase;
     }
 

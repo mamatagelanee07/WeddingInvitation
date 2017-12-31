@@ -12,7 +12,7 @@ import com.andigeeky.weddinginvitation.common.GoogleLoginHelper;
 import com.andigeeky.weddinginvitation.common.utility.RegisterRequestMapper;
 import com.andigeeky.weddinginvitation.domain.service.networking.common.Resource;
 import com.andigeeky.weddinginvitation.domain.service.networking.common.Status;
-import com.andigeeky.weddinginvitation.presentation.UserViewModel;
+import com.andigeeky.weddinginvitation.presentation.SignViewModel;
 import com.andigeeky.weddinginvitation.presentation.UserViewModelFactory;
 import com.facebook.FacebookException;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -41,7 +41,7 @@ public class SignUpScreen extends BaseActivity {
     @Inject
     FacebookLoginHelper facebookLoginHelper;
     @Inject
-    UserViewModel viewModel;
+    SignViewModel viewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

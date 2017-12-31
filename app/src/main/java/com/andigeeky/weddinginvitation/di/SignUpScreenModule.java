@@ -5,8 +5,8 @@ import android.arch.lifecycle.ViewModelProviders;
 import com.andigeeky.weddinginvitation.common.FacebookLoginHelper;
 import com.andigeeky.weddinginvitation.common.GoogleLoginHelper;
 import com.andigeeky.weddinginvitation.domain.RegisterUseCase;
+import com.andigeeky.weddinginvitation.presentation.SignViewModel;
 import com.andigeeky.weddinginvitation.repository.RemoteRepository;
-import com.andigeeky.weddinginvitation.presentation.UserViewModel;
 import com.andigeeky.weddinginvitation.presentation.UserViewModelFactory;
 import com.andigeeky.weddinginvitation.view.SignUpScreen;
 
@@ -39,7 +39,7 @@ public class SignUpScreenModule {
     }
 
     @Provides
-    UserViewModel provideUserViewModel(SignUpScreen activity, UserViewModelFactory userViewModelFactory) {
-        return ViewModelProviders.of(activity, userViewModelFactory).get(UserViewModel.class);
+    SignViewModel provideUserViewModel(SignUpScreen activity, UserViewModelFactory userViewModelFactory) {
+        return ViewModelProviders.of(activity, userViewModelFactory).get(SignViewModel.class);
     }
 }
