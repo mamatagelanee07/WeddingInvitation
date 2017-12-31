@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.andigeeky.weddinginvitation.WeddingApplication;
 import com.andigeeky.weddinginvitation.data.RemoteRepositoryDataStore;
-import com.andigeeky.weddinginvitation.domain.RemoteRepository;
+import com.andigeeky.weddinginvitation.data.RemoteRepository;
 
 import javax.inject.Singleton;
 
