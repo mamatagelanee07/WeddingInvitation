@@ -1,1 +1,1 @@
-include ':app', ':windowstyleloadingview'
+include ':app', ':windowstyleloadingview', ':multipleimagepickerlibrary'

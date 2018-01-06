@@ -3,6 +3,8 @@ package com.andigeeky.weddinginvitation.view;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -14,6 +16,7 @@ import com.andigeeky.weddinginvitation.domain.service.networking.common.Resource
 import com.andigeeky.weddinginvitation.domain.service.networking.common.Status;
 import com.andigeeky.weddinginvitation.presentation.SignViewModel;
 import com.andigeeky.weddinginvitation.presentation.UserViewModelFactory;
+import com.andigeeky.weddinginvitation.storage.upload.UploadActivity;
 import com.facebook.FacebookException;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.AuthCredential;
@@ -81,6 +84,7 @@ public class SignUpScreen extends BaseActivity {
                     stopLoading();
                     Toast.makeText(SignUpScreen.this, "User registered: SUCCESS   -------"
                             + result.data.getUser().getEmail(), Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(this, UploadActivity.class));
                     break;
                 case ERROR:
                     stopLoading();
@@ -114,7 +118,9 @@ public class SignUpScreen extends BaseActivity {
 
     @OnClick(R.id.btn_register)
     public void registerWithEmailAndPassword() {
-        viewModel.registerUser(RegisterRequestMapper.registerWithEmailAndPassword("gelaneem@gmail.com", "password"));
+        String email = ((TextInputLayout) findViewById(R.id.edt_email)).getEditText().getText() == null ? null : ((TextInputLayout) findViewById(R.id.edt_email)).getEditText().getText().toString();
+        String password = ((TextInputLayout) findViewById(R.id.edit_pwd)).getEditText().getText() == null ? null : ((TextInputLayout) findViewById(R.id.edit_pwd)).getEditText().getText().toString();
+        viewModel.registerUser(RegisterRequestMapper.registerWithEmailAndPassword(email, password));
     }
 
     private void registerWithGoogle(GoogleSignInAccount account) {
