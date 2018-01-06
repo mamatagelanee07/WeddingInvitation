@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.andigeeky.weddinginvitation"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -55,6 +55,7 @@ project.ext {
 dependencies {
     
     implementation project(':windowstyleloadingview')
+    implementation project(':multipleimagepickerlibrary')
 
     implementation "com.android.support:appcompat-v7:$project.appcompactVersion"
     implementation "com.android.support.constraint:constraint-layout:$project.constraintLayoutVersion"

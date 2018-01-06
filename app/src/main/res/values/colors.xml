@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <color name="background">#FFFFFF</color>
-    <color name="colorPrimary" tools:override="true">#094578</color>
-    <color name="colorPrimaryDark" tools:override="true">#094578</color>
-    <color name="colorAccent" tools:override="true">#7395b9</color>
-    <color name="done_button_bg" tools:override="true">#FFFFFF</color>
-    <color name="done_button_text">#094578</color>
-    <color name="bottom_album_bg">#cc094578</color>
-    <color name="select_image">#88094578</color>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="color_shadow_accent">#ff4064</color>
+    <color name="color_shadow_sign_up_start">#DD083b66</color>
+    <color name="color_shadow_sign_up_end">#DD083b66</color>
+    <color name="color_main">#083b66</color>
 </resources>
