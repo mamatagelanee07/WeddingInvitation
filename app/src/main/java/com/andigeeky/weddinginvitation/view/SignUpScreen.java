@@ -1,6 +1,5 @@
 package com.andigeeky.weddinginvitation.view;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
@@ -33,7 +32,6 @@ import dagger.android.AndroidInjection;
 
 public class SignUpScreen extends BaseActivity {
     private static final String TAG = SignUpScreen.class.getSimpleName();
-    ProgressDialog progress;
     @BindView(R.id.btn_register)
     public Button btnEmailSignUp;
 

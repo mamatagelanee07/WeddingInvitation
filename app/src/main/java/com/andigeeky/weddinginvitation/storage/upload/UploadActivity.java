@@ -3,39 +3,71 @@ package com.andigeeky.weddinginvitation.storage.upload;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.andigeeky.weddinginvitation.R;
+import com.andigeeky.weddinginvitation.databinding.ActivityUploadBinding;
+import com.andigeeky.weddinginvitation.view.BaseActivity;
 import com.haresh.multipleimagepickerlibrary.MultiImageSelector;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class UploadActivity extends AppCompatActivity {
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
+
+public class UploadActivity extends BaseActivity {
     private ArrayList<String> mSelectedImagesList = new ArrayList<>();
-    private final int MAX_IMAGE_SELECTION_LIMIT = 10;
     private final int REQUEST_IMAGE = 301;
     private static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 401;
 
-    private MultiImageSelector mMultiImageSelector;
+    @Inject
+    ImageViewModelFactory imageViewModelFactory;
+    @Inject
+    ImageViewModel imageViewModel;
+    @Inject
+    MultiImageSelector mMultiImageSelector;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_upload);
+        ActivityUploadBinding activityUploadBinding = DataBindingUtil.setContentView(this, R.layout.activity_upload);
 
-        mMultiImageSelector = MultiImageSelector.create();
+        imageViewModel.getImages().observe(this, taskSnapshotResource -> {
+            Log.e("Data", taskSnapshotResource.status + "");
+            switch (taskSnapshotResource.status) {
+                case SUCCESS:
+                    stopLoading();
+                    Toast.makeText(UploadActivity.this, "Image Uploaded successfully", Toast.LENGTH_SHORT).show();
+                    break;
+                case ERROR:
+                    stopLoading();
+                    Toast.makeText(UploadActivity.this, "Error happened while image uploading", Toast.LENGTH_SHORT).show();
+                    break;
+                case LOADING:
+                    startLoading();
+                    break;
+            }
+        });
 
-        if (checkAndRequestPermissions()) {
-            openChooseActivity();
-        }
+        activityUploadBinding.btnUploadImages.setOnClickListener(v -> {
+            if (checkAndRequestPermissions()) {
+                openChooseActivity();
+            }
+        });
     }
 
-    private void openChooseActivity() {
+    private void  openChooseActivity() {
         mMultiImageSelector.showCamera(true);
+        int MAX_IMAGE_SELECTION_LIMIT = 10;
         mMultiImageSelector.count(MAX_IMAGE_SELECTION_LIMIT);
         mMultiImageSelector.multi();
         mMultiImageSelector.origin(mSelectedImagesList);
@@ -45,13 +77,14 @@ public class UploadActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE) {
-            try {
-                mSelectedImagesList = data.getStringArrayListExtra(MultiImageSelector.EXTRA_RESULT);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (resultCode == RESULT_OK && requestCode == REQUEST_IMAGE) {
+            mSelectedImagesList = data.getStringArrayListExtra(MultiImageSelector.EXTRA_RESULT);
+            uploadImages();
         }
+    }
+
+    private void uploadImages() {
+        imageViewModel.uploadImages(ImageUtils.getImages(mSelectedImagesList));
     }
 
     private boolean checkAndRequestPermissions() {
@@ -70,7 +103,7 @@ public class UploadActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         if (requestCode == REQUEST_ID_MULTIPLE_PERMISSIONS) {
             openChooseActivity();
         }

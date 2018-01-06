@@ -49,7 +49,9 @@
         </activity>
         <!-- ____________________Facebook declaration starts______________________ -->
 
-        <activity android:name=".storage.upload.UploadActivity"></activity>
+        <activity
+            android:name=".storage.upload.UploadActivity"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>
