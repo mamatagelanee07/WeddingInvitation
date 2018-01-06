@@ -1,16 +1,15 @@
 package com.andigeeky.weddinginvitation.storage.upload;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ImageUtils {
-    public static HashMap<String, Image> getImages(ArrayList<String> imagePaths) {
-        HashMap<String, Image> imageHashMap = new HashMap<>();
+    public static ArrayList<Image> getImages(ArrayList<String> imagePaths) {
+        ArrayList<Image> images = new ArrayList<>();
         for (String imagePath : imagePaths) {
             Image image = new Image();
             image.setFilePath(imagePath);
-            imageHashMap.put(image.getFileName(), image);
+            images.add(image);
         }
-        return imageHashMap;
+        return images;
     }
 }

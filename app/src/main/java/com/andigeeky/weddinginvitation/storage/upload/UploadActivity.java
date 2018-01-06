@@ -8,11 +8,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.andigeeky.weddinginvitation.R;
 import com.andigeeky.weddinginvitation.databinding.ActivityUploadBinding;
+import com.andigeeky.weddinginvitation.domain.service.networking.common.Status;
 import com.andigeeky.weddinginvitation.view.BaseActivity;
 import com.haresh.multipleimagepickerlibrary.MultiImageSelector;
 
@@ -41,20 +41,24 @@ public class UploadActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         ActivityUploadBinding activityUploadBinding = DataBindingUtil.setContentView(this, R.layout.activity_upload);
 
-        imageViewModel.getImages().observe(this, taskSnapshotResource -> {
-            Log.e("Data", taskSnapshotResource.status + "");
-            switch (taskSnapshotResource.status) {
-                case SUCCESS:
+        imageViewModel.getImages().observe(this, uploadImageResponse -> {
+            if (uploadImageResponse != null) {
+                int current = uploadImageResponse.getCurrentImageIndex();
+                int size = mSelectedImagesList.size();
+                if (uploadImageResponse.getResult().status == Status.LOADING) {
+                    Toast.makeText(UploadActivity.this,
+                            current + 1 + "out of " + size + " uploading", Toast.LENGTH_SHORT).show();
+
+                    int progress = (current + 1) * 100 / size;
+                    setProgressOfDialog(progress);
+                }
+
+                if (current == size - 1 && (uploadImageResponse.getResult().status == Status.SUCCESS ||
+                        uploadImageResponse.getResult().status == Status.ERROR)) {
                     stopLoading();
-                    Toast.makeText(UploadActivity.this, "Image Uploaded successfully", Toast.LENGTH_SHORT).show();
-                    break;
-                case ERROR:
-                    stopLoading();
-                    Toast.makeText(UploadActivity.this, "Error happened while image uploading", Toast.LENGTH_SHORT).show();
-                    break;
-                case LOADING:
-                    startLoading();
-                    break;
+                    Toast.makeText(UploadActivity.this, "Successfully uploaded", Toast.LENGTH_SHORT).
+                            show();
+                }
             }
         });
 
@@ -65,7 +69,7 @@ public class UploadActivity extends BaseActivity {
         });
     }
 
-    private void  openChooseActivity() {
+    private void openChooseActivity() {
         mMultiImageSelector.showCamera(true);
         int MAX_IMAGE_SELECTION_LIMIT = 10;
         mMultiImageSelector.count(MAX_IMAGE_SELECTION_LIMIT);
@@ -84,6 +88,8 @@ public class UploadActivity extends BaseActivity {
     }
 
     private void uploadImages() {
+        showProgress(100);
+//        startLoading();
         imageViewModel.uploadImages(ImageUtils.getImages(mSelectedImagesList));
     }
 
