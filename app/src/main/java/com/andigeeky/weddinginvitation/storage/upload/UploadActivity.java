@@ -41,32 +41,40 @@ public class UploadActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         ActivityUploadBinding activityUploadBinding = DataBindingUtil.setContentView(this, R.layout.activity_upload);
 
-        imageViewModel.getImages().observe(this, uploadImageResponse -> {
-            if (uploadImageResponse != null) {
-                int current = uploadImageResponse.getCurrentImageIndex();
-                int size = mSelectedImagesList.size();
-                if (uploadImageResponse.getResult().status == Status.LOADING) {
-                    Toast.makeText(UploadActivity.this,
-                            current + 1 + "out of " + size + " uploading", Toast.LENGTH_SHORT).show();
-
-                    int progress = (current + 1) * 100 / size;
-                    setProgressOfDialog(progress);
-                }
-
-                if (current == size - 1 && (uploadImageResponse.getResult().status == Status.SUCCESS ||
-                        uploadImageResponse.getResult().status == Status.ERROR)) {
-                    stopLoading();
-                    Toast.makeText(UploadActivity.this, "Successfully uploaded", Toast.LENGTH_SHORT).
-                            show();
-                }
-            }
-        });
+        imageViewModel.getImages().observe(this, this::handleUploadImageResponse);
 
         activityUploadBinding.btnUploadImages.setOnClickListener(v -> {
             if (checkAndRequestPermissions()) {
                 openChooseActivity();
             }
         });
+    }
+
+    private void handleUploadImageResponse(UploadImageResponse uploadImageResponse) {
+        if (uploadImageResponse != null) {
+            int current = uploadImageResponse.getCurrentImageIndex();
+            int size = mSelectedImagesList.size();
+            if (uploadImageResponse.getResult().status == Status.LOADING) {
+                Toast.makeText(UploadActivity.this,
+                        current + 1 + "out of " + size + " uploading", Toast.LENGTH_SHORT).show();
+
+                int progress = (current + 1) * 100 / size;
+                setProgressOfDialog(progress);
+            }
+
+            if (current == size - 1 && (uploadImageResponse.getResult().status == Status.SUCCESS ||
+                    uploadImageResponse.getResult().status == Status.ERROR)) {
+                stopLoading();
+                Toast.makeText(UploadActivity.this, "Successfully uploaded", Toast.LENGTH_SHORT).
+                        show();
+                // Store in database
+                storeImageUrlInDatabase(imageViewModel.getSuccessfullyUploadedImages());
+            }
+        }
+    }
+
+    private void storeImageUrlInDatabase(ArrayList<Image> images) {
+
     }
 
     private void openChooseActivity() {

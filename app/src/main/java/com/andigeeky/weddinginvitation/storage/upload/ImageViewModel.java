@@ -21,8 +21,8 @@ public class ImageViewModel extends ViewModel {
     }
 
     public void uploadImages(ArrayList<Image> imageList) {
-            images.addAll(imageList);
-            startUpload();
+        images.addAll(imageList);
+        startUpload();
     }
 
     private void startUpload() {
@@ -54,6 +54,24 @@ public class ImageViewModel extends ViewModel {
 
     public LiveData<UploadImageResponse> getImages() {
         return mediatorLiveData;
+    }
+
+    public ArrayList<Image> getSuccessfullyUploadedImages() {
+        ArrayList<Image> successImages = new ArrayList<>();
+        for (Image image : images) {
+            if (image.getState() == State.SUCCESS)
+                successImages.add(image);
+        }
+        return successImages;
+    }
+
+    public ArrayList<Image> getFailedUploadedImages() {
+        ArrayList<Image> errorImages = new ArrayList<>();
+        for (Image image : images) {
+            if (image.getState() == State.ERROR)
+                errorImages.add(image);
+        }
+        return errorImages;
     }
 
     public void clearData() {
