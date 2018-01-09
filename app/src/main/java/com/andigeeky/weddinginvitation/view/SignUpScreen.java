@@ -1,56 +1,47 @@
 package com.andigeeky.weddinginvitation.view;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
-import android.widget.Button;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.andigeeky.weddinginvitation.R;
 import com.andigeeky.weddinginvitation.common.FacebookLoginHelper;
 import com.andigeeky.weddinginvitation.common.GoogleLoginHelper;
 import com.andigeeky.weddinginvitation.common.utility.RegisterRequestMapper;
-import com.andigeeky.weddinginvitation.domain.service.networking.common.Resource;
-import com.andigeeky.weddinginvitation.domain.service.networking.common.Status;
+import com.andigeeky.weddinginvitation.common.utility.ValidationUtils;
+import com.andigeeky.weddinginvitation.databinding.ActivitySignUpBinding;
 import com.andigeeky.weddinginvitation.presentation.SignViewModel;
-import com.andigeeky.weddinginvitation.presentation.UserViewModelFactory;
 import com.andigeeky.weddinginvitation.storage.upload.UploadActivity;
+import com.andigeeky.weddinginvitation.view.vo.Credentials;
 import com.facebook.FacebookException;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import dagger.android.AndroidInjection;
 
 public class SignUpScreen extends BaseActivity {
     private static final String TAG = SignUpScreen.class.getSimpleName();
-    @BindView(R.id.btn_register)
-    public Button btnEmailSignUp;
-
-    @Inject
-    UserViewModelFactory userViewModelFactory;
     @Inject
     GoogleLoginHelper googleLoginHelper;
     @Inject
     FacebookLoginHelper facebookLoginHelper;
     @Inject
     SignViewModel viewModel;
+    private ActivitySignUpBinding activitySignUpBinding;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
-
-        ButterKnife.bind(this);
+        activitySignUpBinding = DataBindingUtil.setContentView(this, R.layout.activity_sign_up);
+        activitySignUpBinding.setHandlers(new Handler());
 
         facebookLoginHelper.registerHandler(new FacebookLoginHelper.FacebookAuthHandler() {
             @Override
@@ -64,14 +55,6 @@ public class SignUpScreen extends BaseActivity {
             }
         });
 
-        Resource<AuthResult> response = viewModel.getUser().getValue();
-
-        if (response != null) {
-            if (response.status == Status.SUCCESS && response.data.getUser() != null) {
-                btnEmailSignUp.setEnabled(false);
-                Toast.makeText(this, "User is already logged in!!", Toast.LENGTH_SHORT).show();
-            }
-        }
         viewModel.getUser().observe(this, result -> {
 
             switch (result.status) {
@@ -93,16 +76,6 @@ public class SignUpScreen extends BaseActivity {
         });
     }
 
-    @OnClick(R.id.btn_facebook)
-    public void getFacebookCredentials() {
-        facebookLoginHelper.getFacebookCredentials();
-    }
-
-    @OnClick(R.id.btn_google)
-    public void getGoogleCredentials() {
-        googleLoginHelper.getGoogleCredentials();
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -114,11 +87,8 @@ public class SignUpScreen extends BaseActivity {
         }
     }
 
-    @OnClick(R.id.btn_register)
-    public void registerWithEmailAndPassword() {
-        String email = ((TextInputLayout) findViewById(R.id.edt_email)).getEditText().getText() == null ? null : ((TextInputLayout) findViewById(R.id.edt_email)).getEditText().getText().toString();
-        String password = ((TextInputLayout) findViewById(R.id.edit_pwd)).getEditText().getText() == null ? null : ((TextInputLayout) findViewById(R.id.edit_pwd)).getEditText().getText().toString();
-        viewModel.registerUser(RegisterRequestMapper.registerWithEmailAndPassword(email, password));
+    public void registerWithEmailAndPassword(Credentials credentials) {
+        viewModel.registerUser(RegisterRequestMapper.registerWithEmailAndPassword(credentials));
     }
 
     private void registerWithGoogle(GoogleSignInAccount account) {
@@ -131,4 +101,73 @@ public class SignUpScreen extends BaseActivity {
         viewModel.registerUser(RegisterRequestMapper.registerWithFacebook(authCredential));
     }
 
+    private boolean validateCredentials(Credentials credentials) {
+        clearErrors();
+        if (!ValidationUtils.isValidEmail(credentials.getEmail())) {
+            activitySignUpBinding.edtEmail.requestFocus();
+            activitySignUpBinding.edtEmail.setErrorEnabled(true);
+            activitySignUpBinding.edtEmail.setError(getString(R.string.err_email));
+            return false;
+        }
+
+        if (!ValidationUtils.isPasswordValid(credentials.getPassword())) {
+            activitySignUpBinding.editPwd.requestFocus();
+            activitySignUpBinding.editPwd.setErrorEnabled(true);
+            activitySignUpBinding.editPwd.setError(getString(R.string.err_password));
+            return false;
+        }
+
+        if (!ValidationUtils.isPasswordValid(credentials.getcPassword())) {
+            activitySignUpBinding.edtConfirmPwd.requestFocus();
+            activitySignUpBinding.edtConfirmPwd.setErrorEnabled(true);
+            activitySignUpBinding.edtConfirmPwd.setError(getString(R.string.err_password));
+            return false;
+        }
+
+        if (!ValidationUtils.isPasswordMatch(credentials.getPassword(), credentials.getcPassword())) {
+            activitySignUpBinding.edtConfirmPwd.requestFocus();
+            activitySignUpBinding.edtConfirmPwd.setErrorEnabled(true);
+            activitySignUpBinding.edtConfirmPwd.setError(getString(R.string.err_password_match));
+            return false;
+        }
+        return true;
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void clearErrors() {
+        activitySignUpBinding.edtEmail.setErrorEnabled(false);
+        activitySignUpBinding.edtEmail.setError(null);
+        activitySignUpBinding.editPwd.setErrorEnabled(false);
+        activitySignUpBinding.editPwd.setError(null);
+        activitySignUpBinding.edtConfirmPwd.setErrorEnabled(false);
+        activitySignUpBinding.edtConfirmPwd.setError(null);
+    }
+
+    public class Handler {
+        public void onClickGoogle(View view) {
+            googleLoginHelper.getGoogleCredentials();
+        }
+
+        public void onClickFacebook(View view) {
+            facebookLoginHelper.getFacebookCredentials();
+        }
+
+        public void onClickEmail(View view) {
+            Credentials credentials = new Credentials();
+            if (activitySignUpBinding.edtEmail.getEditText() != null) {
+                credentials.setEmail(activitySignUpBinding.edtEmail.getEditText().getText().toString());
+            }
+
+            EditText edtConfirmPwd = activitySignUpBinding.edtConfirmPwd.getEditText();
+            EditText edtPwd = activitySignUpBinding.editPwd.getEditText();
+            if (edtPwd != null && edtConfirmPwd != null) {
+                credentials.setPassword(edtPwd.getText().toString());
+                credentials.setcPassword(edtConfirmPwd.getText().toString());
+            }
+
+            if (validateCredentials(credentials)) {
+                registerWithEmailAndPassword(credentials);
+            }
+        }
+    }
 }

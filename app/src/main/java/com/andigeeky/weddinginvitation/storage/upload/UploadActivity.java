@@ -29,8 +29,6 @@ public class UploadActivity extends BaseActivity {
     private static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 401;
 
     @Inject
-    ImageViewModelFactory imageViewModelFactory;
-    @Inject
     ImageViewModel imageViewModel;
     @Inject
     MultiImageSelector mMultiImageSelector;

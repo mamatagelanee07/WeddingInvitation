@@ -3,6 +3,7 @@ package com.andigeeky.weddinginvitation.common.utility;
 import com.andigeeky.weddinginvitation.domain.service.RegisterUserRequest;
 import com.andigeeky.weddinginvitation.model.AccountType;
 import com.andigeeky.weddinginvitation.model.User;
+import com.andigeeky.weddinginvitation.view.vo.Credentials;
 import com.google.firebase.auth.AuthCredential;
 
 /**
@@ -10,11 +11,11 @@ import com.google.firebase.auth.AuthCredential;
  */
 
 public class RegisterRequestMapper {
-    public static RegisterUserRequest registerWithEmailAndPassword(String email, String password) {
+    public static RegisterUserRequest registerWithEmailAndPassword(Credentials credentials) {
         RegisterUserRequest registerUserRequest = new RegisterUserRequest();
         User user = new User();
-        user.setEmail(email);
-        user.setPassword(password);
+        user.setEmail(credentials.getEmail());
+        user.setPassword(credentials.getPassword());
         registerUserRequest.setAccountType(AccountType.PASSWORD);
         registerUserRequest.setUser(user);
         return registerUserRequest;

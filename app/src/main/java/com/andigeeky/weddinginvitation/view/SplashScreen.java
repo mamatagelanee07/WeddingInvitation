@@ -7,13 +7,15 @@ import android.os.Handler;
 import com.andigeeky.weddinginvitation.R;
 import com.andigeeky.weddinginvitation.storage.upload.UploadActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import javax.inject.Inject;
 
 public class SplashScreen extends BaseActivity {
 
     private Handler mHandler;
     private Runnable mRunnable;
     private static final long SPLASH_DURATION = 2500L;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

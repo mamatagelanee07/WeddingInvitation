@@ -10,14 +10,17 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 public class ImageViewModel extends ViewModel {
-    private UploadImageUseCase uploadImageUseCase;
+    private ImageRepositoryDataStore imageRepositoryDataStore;
     private MediatorLiveData<UploadImageResponse> mediatorLiveData = new MediatorLiveData<>();
     private ArrayList<Image> images = new ArrayList<>();
     private int currentImageIndex = 0;
 
-    ImageViewModel(UploadImageUseCase uploadImageUseCase) {
-        this.uploadImageUseCase = uploadImageUseCase;
+    @Inject
+    ImageViewModel(ImageRepositoryDataStore imageRepositoryDataStore) {
+        this.imageRepositoryDataStore = imageRepositoryDataStore;
     }
 
     public void uploadImages(ArrayList<Image> imageList) {
@@ -26,7 +29,7 @@ public class ImageViewModel extends ViewModel {
     }
 
     private void startUpload() {
-        LiveData<Resource<UploadTask.TaskSnapshot>> resourceLiveData = uploadImageUseCase.uploadImages(images.get(currentImageIndex).getAbsolutePath());
+        LiveData<Resource<UploadTask.TaskSnapshot>> resourceLiveData = imageRepositoryDataStore.uploadImages(images.get(currentImageIndex).getAbsolutePath());
 
         this.mediatorLiveData.addSource(resourceLiveData, taskSnapshotResource -> {
             if ((taskSnapshotResource != null ? taskSnapshotResource.status : null) == Status.SUCCESS) {

@@ -11,4 +11,10 @@
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="hint_confirm_password">Confirm Password</string>
+    <string name="text_gallery">Gallery</string>
+    <string name="text_user">Profile</string>
+    <string name="text_invitation">Invitation</string>
+    <string name="err_email">Enter valid email</string>
+    <string name="err_password">Password should be at least 6 characters!</string>
+    <string name="err_password_match">Password should match</string>
 </resources>

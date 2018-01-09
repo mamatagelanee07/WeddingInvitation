@@ -7,7 +7,15 @@ import com.andigeeky.weddinginvitation.domain.service.networking.common.Resource
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class UserRepository implements IUserRepository {
+
+    @Inject
+    public UserRepository() {
+    }
 
     @Override
     public FirebaseUser getUser() {
