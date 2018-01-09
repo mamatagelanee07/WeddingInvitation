@@ -28,9 +28,6 @@ public class SignViewModel extends ViewModel {
         this.mediatorLiveData.addSource(resourceLiveData, authResultResource -> mediatorLiveData.setValue(authResultResource));
     }
 
-    /**
-     * Exposes the latest user status so the UI can observe it
-     */
     public LiveData<Resource<AuthResult>> getUser() {
         return mediatorLiveData;
     }

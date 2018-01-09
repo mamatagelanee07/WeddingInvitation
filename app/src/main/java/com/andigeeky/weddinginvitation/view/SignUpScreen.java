@@ -111,14 +111,14 @@ public class SignUpScreen extends BaseActivity {
             return false;
         }
 
-        if (!ValidationUtils.isPasswordValid(credentials.getcPassword())) {
+        if (!ValidationUtils.isPasswordValid(credentials.getCPassword())) {
             activitySignUpBinding.edtConfirmPwd.requestFocus();
             activitySignUpBinding.edtConfirmPwd.setErrorEnabled(true);
             activitySignUpBinding.edtConfirmPwd.setError(getString(R.string.err_password));
             return false;
         }
 
-        if (!ValidationUtils.isPasswordMatch(credentials.getPassword(), credentials.getcPassword())) {
+        if (!ValidationUtils.isPasswordMatch(credentials.getPassword(), credentials.getCPassword())) {
             activitySignUpBinding.edtConfirmPwd.requestFocus();
             activitySignUpBinding.edtConfirmPwd.setErrorEnabled(true);
             activitySignUpBinding.edtConfirmPwd.setError(getString(R.string.err_password_match));
@@ -168,7 +168,7 @@ public class SignUpScreen extends BaseActivity {
             EditText edtPwd = activitySignUpBinding.editPwd.getEditText();
             if (edtPwd != null && edtConfirmPwd != null) {
                 credentials.setPassword(edtPwd.getText().toString());
-                credentials.setcPassword(edtConfirmPwd.getText().toString());
+                credentials.setCPassword(edtConfirmPwd.getText().toString());
             }
 
             if (validateCredentials(credentials)) {

@@ -47,8 +47,8 @@ public class UserFragment extends Fragment implements Injectable {
         super.onActivityCreated(savedInstanceState);
         /*userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel.class);
 
-        userViewModel.getUser().observe(this, userResource -> {
-            binding.get().setUser(userResource == null ? null : userResource.data);
+        userViewModel.getCredentials().observe(this, userResource -> {
+            binding.get().setCredentials(userResource == null ? null : userResource.data);
             binding.get().setUserResource(userResource);
             // this is only necessary because espresso cannot read data binding callbacks.
             binding.get().executePendingBindings();

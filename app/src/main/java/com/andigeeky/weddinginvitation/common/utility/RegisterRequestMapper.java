@@ -17,7 +17,7 @@ public class RegisterRequestMapper {
         user.setEmail(credentials.getEmail());
         user.setPassword(credentials.getPassword());
         registerUserRequest.setAccountType(AccountType.PASSWORD);
-        registerUserRequest.setUser(user);
+        registerUserRequest.setCredentials(user);
         return registerUserRequest;
     }
 

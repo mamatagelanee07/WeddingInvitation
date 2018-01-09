@@ -21,11 +21,20 @@ public class Credentials {
         this.password = password;
     }
 
-    public String getcPassword() {
+    public String getCPassword() {
         return cPassword;
     }
 
-    public void setcPassword(String cPassword) {
+    public void setCPassword(String cPassword) {
         this.cPassword = cPassword;
+    }
+
+    @Override
+    public String toString() {
+        return "Credentials{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", cPassword='" + cPassword + '\'' +
+                '}';
     }
 }

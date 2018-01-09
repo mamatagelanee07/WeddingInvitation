@@ -2,19 +2,18 @@ package com.andigeeky.weddinginvitation.domain.service;
 
 import com.andigeeky.weddinginvitation.model.AccountType;
 import com.andigeeky.weddinginvitation.model.User;
+import com.andigeeky.weddinginvitation.view.vo.Credentials;
 import com.google.firebase.auth.AuthCredential;
 
-import java.io.Serializable;
-
-public class RegisterUserRequest implements Serializable{
-    private User user;
+public class RegisterUserRequest {
+    private Credentials credentials;
     private AuthCredential authCredential;
 
     @AccountType.IAccountType
     private int accountType;
 
-    public User getUser() {
-        return user;
+    public Credentials getCredentials() {
+        return credentials;
     }
 
     public AuthCredential getAuthCredential() {
@@ -25,8 +24,8 @@ public class RegisterUserRequest implements Serializable{
         return accountType;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setCredentials(Credentials credentials) {
+        this.credentials = credentials;
     }
 
     public void setAuthCredential(AuthCredential authCredential) {
@@ -40,7 +39,7 @@ public class RegisterUserRequest implements Serializable{
     @Override
     public String toString() {
         return "RegisterUserRequest{" +
-                "user=" + user +
+                "credentials=" + credentials +
                 ", authCredential=" + authCredential +
                 ", accountType=" + accountType +
                 '}';

@@ -45,7 +45,7 @@ public class RegisterUserService {
         switch (request.getAccountType()) {
             case AccountType.PASSWORD:
                 resultTask = firebaseAuth.createUserWithEmailAndPassword(
-                        request.getUser().getEmail(), request.getUser().getPassword());
+                        request.getCredentials().getEmail(), request.getCredentials().getPassword());
                 break;
             case AccountType.GOOGLE:
             case AccountType.FACEBOOK:
