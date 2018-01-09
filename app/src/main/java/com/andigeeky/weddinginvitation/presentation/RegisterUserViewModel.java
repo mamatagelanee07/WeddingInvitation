@@ -2,29 +2,26 @@ package com.andigeeky.weddinginvitation.presentation;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
-import android.support.annotation.Nullable;
 
-import com.andigeeky.weddinginvitation.domain.service.RegisterUserRequest;
+import com.andigeeky.weddinginvitation.domain.service.RegisterCredentials;
 import com.andigeeky.weddinginvitation.domain.service.networking.common.Resource;
-import com.andigeeky.weddinginvitation.repository.RemoteRepository;
-import com.andigeeky.weddinginvitation.repository.RemoteRepositoryDataStore;
+import com.andigeeky.weddinginvitation.repository.user.UserRepository;
 import com.google.firebase.auth.AuthResult;
 
 import javax.inject.Inject;
 
-public class SignViewModel extends ViewModel {
-    private RemoteRepositoryDataStore remoteRepository;
+public class RegisterUserViewModel extends ViewModel {
+    private UserRepository userRepository;
     private MediatorLiveData<Resource<AuthResult>> mediatorLiveData = new MediatorLiveData<>();
 
     @Inject
-    SignViewModel(RemoteRepositoryDataStore remoteRepository) {
-        this.remoteRepository = remoteRepository;
+    RegisterUserViewModel(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    public void registerUser(RegisterUserRequest request) {
-        LiveData<Resource<AuthResult>> resourceLiveData = remoteRepository.register(request);
+    public void registerUser(RegisterCredentials request) {
+        LiveData<Resource<AuthResult>> resourceLiveData = userRepository.register(request);
         this.mediatorLiveData.addSource(resourceLiveData, authResultResource -> mediatorLiveData.setValue(authResultResource));
     }
 

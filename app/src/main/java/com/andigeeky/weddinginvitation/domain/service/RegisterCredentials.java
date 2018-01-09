@@ -5,7 +5,7 @@ import com.andigeeky.weddinginvitation.model.User;
 import com.andigeeky.weddinginvitation.view.vo.Credentials;
 import com.google.firebase.auth.AuthCredential;
 
-public class RegisterUserRequest {
+public class RegisterCredentials {
     private Credentials credentials;
     private AuthCredential authCredential;
 
@@ -20,6 +20,7 @@ public class RegisterUserRequest {
         return authCredential;
     }
 
+    @AccountType.IAccountType
     public int getAccountType() {
         return accountType;
     }
@@ -38,7 +39,7 @@ public class RegisterUserRequest {
 
     @Override
     public String toString() {
-        return "RegisterUserRequest{" +
+        return "RegisterCredentials{" +
                 "credentials=" + credentials +
                 ", authCredential=" + authCredential +
                 ", accountType=" + accountType +

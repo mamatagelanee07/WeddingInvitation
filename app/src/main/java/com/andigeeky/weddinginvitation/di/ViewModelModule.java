@@ -4,7 +4,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
 import com.andigeeky.weddinginvitation.model.WeddingViewModelFactory;
-import com.andigeeky.weddinginvitation.presentation.SignViewModel;
+import com.andigeeky.weddinginvitation.presentation.RegisterUserViewModel;
 import com.andigeeky.weddinginvitation.storage.upload.ImageViewModel;
 import com.andigeeky.weddinginvitation.view.user.UserViewModel;
 
@@ -21,13 +21,13 @@ public abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(SignViewModel.class)
-    abstract ViewModel bindSignInViewModel(SignViewModel signViewModel);
+    @ViewModelKey(RegisterUserViewModel.class)
+    abstract ViewModel bindRegisterUserViewModel(RegisterUserViewModel registerUserViewModel);
 
     @Binds
     @IntoMap
     @ViewModelKey(ImageViewModel.class)
-    abstract ViewModel bindOmageViewModel(ImageViewModel imageViewModel);
+    abstract ViewModel bindImageViewModel(ImageViewModel imageViewModel);
 
     @Binds
     abstract ViewModelProvider.Factory bindViewModelFactory(WeddingViewModelFactory factory);

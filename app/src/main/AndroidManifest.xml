@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.SignUpScreen"
+            android:name=".view.LoginActivity"
             android:theme="@style/SplashTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 

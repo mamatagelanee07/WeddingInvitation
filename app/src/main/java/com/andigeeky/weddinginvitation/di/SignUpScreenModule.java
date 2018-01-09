@@ -2,9 +2,7 @@ package com.andigeeky.weddinginvitation.di;
 
 import com.andigeeky.weddinginvitation.common.FacebookLoginHelper;
 import com.andigeeky.weddinginvitation.common.GoogleLoginHelper;
-import com.andigeeky.weddinginvitation.domain.RegisterUseCase;
-import com.andigeeky.weddinginvitation.repository.RemoteRepository;
-import com.andigeeky.weddinginvitation.view.SignUpScreen;
+import com.andigeeky.weddinginvitation.view.LoginActivity;
 
 import dagger.Module;
 import dagger.Provides;
@@ -15,12 +13,12 @@ import dagger.Provides;
 @Module
 public class SignUpScreenModule {
     @Provides
-    GoogleLoginHelper provideGoogleLoginHelper(SignUpScreen activity) {
+    GoogleLoginHelper provideGoogleLoginHelper(LoginActivity activity) {
         return new GoogleLoginHelper(activity);
     }
 
     @Provides
-    FacebookLoginHelper provideFacebookLoginHelper(SignUpScreen activity) {
+    FacebookLoginHelper provideFacebookLoginHelper(LoginActivity activity) {
         return new FacebookLoginHelper(activity);
     }
 }

@@ -2,8 +2,7 @@ package com.andigeeky.weddinginvitation.di;
 
 import android.app.Activity;
 
-import com.andigeeky.weddinginvitation.storage.upload.UploadActivity;
-import com.andigeeky.weddinginvitation.view.SignUpScreen;
+import com.andigeeky.weddinginvitation.view.LoginActivity;
 
 import dagger.Binds;
 import dagger.Module;
@@ -19,6 +18,6 @@ public abstract class BuildersModule {
 
     @Binds
     @IntoMap
-    @ActivityKey(SignUpScreen.class)
+    @ActivityKey(LoginActivity.class)
     abstract AndroidInjector.Factory<? extends Activity> bindSignUpScreen(SignUpScreenComponent.Builder builder);
 }

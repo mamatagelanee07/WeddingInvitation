@@ -7,9 +7,6 @@ import android.os.Handler;
 import com.andigeeky.weddinginvitation.R;
 import com.andigeeky.weddinginvitation.storage.upload.UploadActivity;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import javax.inject.Inject;
 
 public class SplashScreen extends BaseActivity {
 
@@ -24,7 +21,7 @@ public class SplashScreen extends BaseActivity {
         mHandler = new Handler();
         mRunnable = () -> {
             if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-                startActivity(new Intent(SplashScreen.this, SignUpScreen.class));
+                startActivity(new Intent(SplashScreen.this, LoginActivity.class));
             } else {
                 startActivity(new Intent(SplashScreen.this, UploadActivity.class));
             }

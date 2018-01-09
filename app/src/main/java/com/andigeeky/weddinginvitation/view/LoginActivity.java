@@ -12,9 +12,9 @@ import com.andigeeky.weddinginvitation.common.FacebookLoginHelper;
 import com.andigeeky.weddinginvitation.common.GoogleLoginHelper;
 import com.andigeeky.weddinginvitation.common.utility.RegisterRequestMapper;
 import com.andigeeky.weddinginvitation.common.utility.ValidationUtils;
-import com.andigeeky.weddinginvitation.databinding.ActivitySignUpBinding;
+import com.andigeeky.weddinginvitation.databinding.ActivityLoginBinding;
 import com.andigeeky.weddinginvitation.domain.service.networking.common.Resource;
-import com.andigeeky.weddinginvitation.presentation.SignViewModel;
+import com.andigeeky.weddinginvitation.presentation.RegisterUserViewModel;
 import com.andigeeky.weddinginvitation.storage.upload.UploadActivity;
 import com.andigeeky.weddinginvitation.view.vo.Credentials;
 import com.facebook.FacebookException;
@@ -28,23 +28,23 @@ import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
 
-public class SignUpScreen extends BaseActivity {
+public class LoginActivity extends BaseActivity {
     @Inject
     GoogleLoginHelper googleLoginHelper;
     @Inject
     FacebookLoginHelper facebookLoginHelper;
     @Inject
-    SignViewModel viewModel;
+    RegisterUserViewModel viewModel;
 
-    private ActivitySignUpBinding activitySignUpBinding;
+    private ActivityLoginBinding activityLoginBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
 
-        activitySignUpBinding = DataBindingUtil.setContentView(this, R.layout.activity_sign_up);
-        activitySignUpBinding.setHandlers(new Handler());
+        activityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
+        activityLoginBinding.setHandlers(new Handler());
 
         facebookLoginHelper.registerHandler(facebookAuthHandler);
 
@@ -58,13 +58,11 @@ public class SignUpScreen extends BaseActivity {
                 break;
             case SUCCESS:
                 stopLoading();
-                Toast.makeText(SignUpScreen.this, "User registered: SUCCESS   -------"
-                        + (result.data != null ? result.data.getUser().getEmail() : null), Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, UploadActivity.class));
                 break;
             case ERROR:
                 stopLoading();
-                Toast.makeText(SignUpScreen.this, "User registered: FAILED  -------"
+                Toast.makeText(LoginActivity.this, "User registered: FAILED  -------"
                         + result.message, Toast.LENGTH_SHORT).show();
                 break;
         }
@@ -98,30 +96,30 @@ public class SignUpScreen extends BaseActivity {
     private boolean validateCredentials(Credentials credentials) {
         clearErrors();
         if (!ValidationUtils.isValidEmail(credentials.getEmail())) {
-            activitySignUpBinding.edtEmail.requestFocus();
-            activitySignUpBinding.edtEmail.setErrorEnabled(true);
-            activitySignUpBinding.edtEmail.setError(getString(R.string.err_email));
+            activityLoginBinding.edtEmail.requestFocus();
+            activityLoginBinding.edtEmail.setErrorEnabled(true);
+            activityLoginBinding.edtEmail.setError(getString(R.string.err_email));
             return false;
         }
 
         if (!ValidationUtils.isPasswordValid(credentials.getPassword())) {
-            activitySignUpBinding.editPwd.requestFocus();
-            activitySignUpBinding.editPwd.setErrorEnabled(true);
-            activitySignUpBinding.editPwd.setError(getString(R.string.err_password));
+            activityLoginBinding.editPwd.requestFocus();
+            activityLoginBinding.editPwd.setErrorEnabled(true);
+            activityLoginBinding.editPwd.setError(getString(R.string.err_password));
             return false;
         }
 
         if (!ValidationUtils.isPasswordValid(credentials.getCPassword())) {
-            activitySignUpBinding.edtConfirmPwd.requestFocus();
-            activitySignUpBinding.edtConfirmPwd.setErrorEnabled(true);
-            activitySignUpBinding.edtConfirmPwd.setError(getString(R.string.err_password));
+            activityLoginBinding.edtConfirmPwd.requestFocus();
+            activityLoginBinding.edtConfirmPwd.setErrorEnabled(true);
+            activityLoginBinding.edtConfirmPwd.setError(getString(R.string.err_password));
             return false;
         }
 
         if (!ValidationUtils.isPasswordMatch(credentials.getPassword(), credentials.getCPassword())) {
-            activitySignUpBinding.edtConfirmPwd.requestFocus();
-            activitySignUpBinding.edtConfirmPwd.setErrorEnabled(true);
-            activitySignUpBinding.edtConfirmPwd.setError(getString(R.string.err_password_match));
+            activityLoginBinding.edtConfirmPwd.requestFocus();
+            activityLoginBinding.edtConfirmPwd.setErrorEnabled(true);
+            activityLoginBinding.edtConfirmPwd.setError(getString(R.string.err_password_match));
             return false;
         }
         return true;
@@ -129,12 +127,12 @@ public class SignUpScreen extends BaseActivity {
 
     @SuppressWarnings("ConstantConditions")
     private void clearErrors() {
-        activitySignUpBinding.edtEmail.setErrorEnabled(false);
-        activitySignUpBinding.edtEmail.setError(null);
-        activitySignUpBinding.editPwd.setErrorEnabled(false);
-        activitySignUpBinding.editPwd.setError(null);
-        activitySignUpBinding.edtConfirmPwd.setErrorEnabled(false);
-        activitySignUpBinding.edtConfirmPwd.setError(null);
+        activityLoginBinding.edtEmail.setErrorEnabled(false);
+        activityLoginBinding.edtEmail.setError(null);
+        activityLoginBinding.editPwd.setErrorEnabled(false);
+        activityLoginBinding.editPwd.setError(null);
+        activityLoginBinding.edtConfirmPwd.setErrorEnabled(false);
+        activityLoginBinding.edtConfirmPwd.setError(null);
     }
 
     private FacebookLoginHelper.FacebookAuthHandler facebookAuthHandler = new FacebookLoginHelper.FacebookAuthHandler() {
@@ -160,12 +158,12 @@ public class SignUpScreen extends BaseActivity {
 
         public void onClickEmail(View view) {
             Credentials credentials = new Credentials();
-            if (activitySignUpBinding.edtEmail.getEditText() != null) {
-                credentials.setEmail(activitySignUpBinding.edtEmail.getEditText().getText().toString());
+            if (activityLoginBinding.edtEmail.getEditText() != null) {
+                credentials.setEmail(activityLoginBinding.edtEmail.getEditText().getText().toString());
             }
 
-            EditText edtConfirmPwd = activitySignUpBinding.edtConfirmPwd.getEditText();
-            EditText edtPwd = activitySignUpBinding.editPwd.getEditText();
+            EditText edtConfirmPwd = activityLoginBinding.edtConfirmPwd.getEditText();
+            EditText edtPwd = activityLoginBinding.editPwd.getEditText();
             if (edtPwd != null && edtConfirmPwd != null) {
                 credentials.setPassword(edtPwd.getText().toString());
                 credentials.setCPassword(edtConfirmPwd.getText().toString());

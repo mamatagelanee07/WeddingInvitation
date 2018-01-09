@@ -7,7 +7,7 @@
 
         <variable
             name="handlers"
-            type="com.andigeeky.weddinginvitation.view.SignUpScreen.Handler" />
+            type="com.andigeeky.weddinginvitation.view.LoginActivity.Handler" />
     </data>
 
     <ScrollView
@@ -20,7 +20,7 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context="com.andigeeky.weddinginvitation.view.SignUpScreen">
+            tools:context="com.andigeeky.weddinginvitation.view.LoginActivity">
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/edt_email"
