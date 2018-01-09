@@ -13,12 +13,14 @@ import com.andigeeky.weddinginvitation.common.GoogleLoginHelper;
 import com.andigeeky.weddinginvitation.common.utility.RegisterRequestMapper;
 import com.andigeeky.weddinginvitation.common.utility.ValidationUtils;
 import com.andigeeky.weddinginvitation.databinding.ActivitySignUpBinding;
+import com.andigeeky.weddinginvitation.domain.service.networking.common.Resource;
 import com.andigeeky.weddinginvitation.presentation.SignViewModel;
 import com.andigeeky.weddinginvitation.storage.upload.UploadActivity;
 import com.andigeeky.weddinginvitation.view.vo.Credentials;
 import com.facebook.FacebookException;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
 
@@ -27,53 +29,45 @@ import javax.inject.Inject;
 import dagger.android.AndroidInjection;
 
 public class SignUpScreen extends BaseActivity {
-    private static final String TAG = SignUpScreen.class.getSimpleName();
     @Inject
     GoogleLoginHelper googleLoginHelper;
     @Inject
     FacebookLoginHelper facebookLoginHelper;
     @Inject
     SignViewModel viewModel;
+
     private ActivitySignUpBinding activitySignUpBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
+
         activitySignUpBinding = DataBindingUtil.setContentView(this, R.layout.activity_sign_up);
         activitySignUpBinding.setHandlers(new Handler());
 
-        facebookLoginHelper.registerHandler(new FacebookLoginHelper.FacebookAuthHandler() {
-            @Override
-            public void onComplete(String facebookCredentials) {
-                SignUpScreen.this.registerWithFacebook(facebookCredentials);
-            }
+        facebookLoginHelper.registerHandler(facebookAuthHandler);
 
-            @Override
-            public void onError(FacebookException e) {
+        viewModel.getUser().observe(this, this::handleResult);
+    }
 
-            }
-        });
-
-        viewModel.getUser().observe(this, result -> {
-
-            switch (result.status) {
-                case LOADING:
-                    startLoading();
-                    break;
-                case SUCCESS:
-                    stopLoading();
-                    Toast.makeText(SignUpScreen.this, "User registered: SUCCESS   -------"
-                            + result.data.getUser().getEmail(), Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(this, UploadActivity.class));
-                    break;
-                case ERROR:
-                    stopLoading();
-                    Toast.makeText(SignUpScreen.this, "User registered: FAILED  -------"
-                            + result.message, Toast.LENGTH_SHORT).show();
-                    break;
-            }
-        });
+    private void handleResult(Resource<AuthResult> result) {
+        switch (result.status) {
+            case LOADING:
+                startLoading();
+                break;
+            case SUCCESS:
+                stopLoading();
+                Toast.makeText(SignUpScreen.this, "User registered: SUCCESS   -------"
+                        + (result.data != null ? result.data.getUser().getEmail() : null), Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, UploadActivity.class));
+                break;
+            case ERROR:
+                stopLoading();
+                Toast.makeText(SignUpScreen.this, "User registered: FAILED  -------"
+                        + result.message, Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     @Override
@@ -142,6 +136,18 @@ public class SignUpScreen extends BaseActivity {
         activitySignUpBinding.edtConfirmPwd.setErrorEnabled(false);
         activitySignUpBinding.edtConfirmPwd.setError(null);
     }
+
+    private FacebookLoginHelper.FacebookAuthHandler facebookAuthHandler = new FacebookLoginHelper.FacebookAuthHandler() {
+        @Override
+        public void onComplete(String facebookCredentials) {
+            registerWithFacebook(facebookCredentials);
+        }
+
+        @Override
+        public void onError(FacebookException e) {
+
+        }
+    };
 
     public class Handler {
         public void onClickGoogle(View view) {
