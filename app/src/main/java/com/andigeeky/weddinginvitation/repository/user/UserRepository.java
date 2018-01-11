@@ -2,7 +2,6 @@ package com.andigeeky.weddinginvitation.repository.user;
 
 
 import android.arch.lifecycle.LiveData;
-import android.net.wifi.hotspot2.pps.Credential;
 
 import com.andigeeky.weddinginvitation.domain.service.RegisterCredentials;
 import com.andigeeky.weddinginvitation.domain.service.networking.common.Resource;

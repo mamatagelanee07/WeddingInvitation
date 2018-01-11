@@ -12,15 +12,15 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-public class ImageViewModel extends ViewModel {
-    private ImageRepositoryDataStore imageRepositoryDataStore;
+public class MainViewModel extends ViewModel {
+    private ImageRepository imageRepository;
     private MediatorLiveData<UploadImageResponse> mediatorLiveData = new MediatorLiveData<>();
     private ArrayList<Image> images = new ArrayList<>();
     private int currentImageIndex = 0;
 
     @Inject
-    ImageViewModel(ImageRepositoryDataStore imageRepositoryDataStore) {
-        this.imageRepositoryDataStore = imageRepositoryDataStore;
+    MainViewModel(ImageRepository imageRepository) {
+        this.imageRepository = imageRepository;
     }
 
     public void uploadImages(ArrayList<Image> imageList) {
@@ -29,7 +29,7 @@ public class ImageViewModel extends ViewModel {
     }
 
     private void startUpload() {
-        LiveData<Resource<UploadTask.TaskSnapshot>> resourceLiveData = imageRepositoryDataStore.uploadImages(images.get(currentImageIndex).getAbsolutePath());
+        LiveData<Resource<UploadTask.TaskSnapshot>> resourceLiveData = imageRepository.uploadImages(images.get(currentImageIndex).getAbsolutePath());
 
         this.mediatorLiveData.addSource(resourceLiveData, taskSnapshotResource -> {
             if ((taskSnapshotResource != null ? taskSnapshotResource.status : null) == Status.SUCCESS) {

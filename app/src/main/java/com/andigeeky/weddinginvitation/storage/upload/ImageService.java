@@ -19,17 +19,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-public class UploadImageService {
-    private static UploadImageService instance;
+public class ImageService {
+    private static ImageService instance;
     private final FirebaseStorage firebaseStorage;
 
-    public UploadImageService() {
+    public ImageService() {
         this.firebaseStorage = FirebaseStorage.getInstance();
     }
 
-    public static synchronized UploadImageService getInstance() {
+    public static synchronized ImageService getInstance() {
         if (instance == null) {
-            instance = new UploadImageService();
+            instance = new ImageService();
         }
         return instance;
     }

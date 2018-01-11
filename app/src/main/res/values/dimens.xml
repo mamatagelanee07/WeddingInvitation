@@ -2,4 +2,5 @@
 
 <resources>
     <dimen name="title_sign_up">32sp</dimen>
+    <dimen name="margin_fab_upload_image">16</dimen>
 </resources>

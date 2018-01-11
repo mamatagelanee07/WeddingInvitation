@@ -12,44 +12,26 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.andigeeky.weddinginvitation.R;
 import com.andigeeky.weddinginvitation.binding.FragmentDataBindingComponent;
-import com.andigeeky.weddinginvitation.common.FacebookUtils;
-import com.andigeeky.weddinginvitation.common.GoogleUtils;
-import com.andigeeky.weddinginvitation.common.utility.RegisterRequestMapper;
-import com.andigeeky.weddinginvitation.common.utility.ValidationUtils;
 import com.andigeeky.weddinginvitation.databinding.FragmentGalleryBinding;
 import com.andigeeky.weddinginvitation.di.Injectable;
 import com.andigeeky.weddinginvitation.domain.service.networking.common.Resource;
 import com.andigeeky.weddinginvitation.domain.service.networking.common.Status;
 import com.andigeeky.weddinginvitation.firestore.AddImageService;
-import com.andigeeky.weddinginvitation.presentation.RegisterUserViewModel;
 import com.andigeeky.weddinginvitation.storage.upload.Image;
 import com.andigeeky.weddinginvitation.storage.upload.ImageUtils;
-import com.andigeeky.weddinginvitation.storage.upload.ImageViewModel;
-import com.andigeeky.weddinginvitation.storage.upload.UploadActivity;
+import com.andigeeky.weddinginvitation.storage.upload.MainViewModel;
 import com.andigeeky.weddinginvitation.storage.upload.UploadImageResponse;
 import com.andigeeky.weddinginvitation.view.BaseActivity;
-import com.andigeeky.weddinginvitation.view.LoginActivity;
 import com.andigeeky.weddinginvitation.view.adapter.GalleryAdapter;
 import com.andigeeky.weddinginvitation.view.adapter.SpacesItemDecoration;
-import com.andigeeky.weddinginvitation.view.vo.Action;
-import com.andigeeky.weddinginvitation.view.vo.Credentials;
-import com.andigeeky.weddinginvitation.view.vo.Login;
-import com.facebook.FacebookException;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FacebookAuthProvider;
-import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.haresh.multipleimagepickerlibrary.MultiImageSelector;
 
@@ -70,7 +52,7 @@ public class GalleryFragment extends Fragment implements Injectable {
     private FragmentGalleryBinding dataBinding;
 
     @Inject
-    ImageViewModel imageViewModel;
+    MainViewModel mainViewModel;
     private MultiImageSelector mMultiImageSelector = MultiImageSelector.create();
 
     public static GalleryFragment create() {
@@ -83,6 +65,7 @@ public class GalleryFragment extends Fragment implements Injectable {
                              @Nullable Bundle savedInstanceState) {
         dataBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_gallery,
                 container, false, dataBindingComponent);
+        dataBinding.setHandlers(new Handler());
         return dataBinding.getRoot();
     }
 
@@ -97,8 +80,8 @@ public class GalleryFragment extends Fragment implements Injectable {
         SpacesItemDecoration decoration = new SpacesItemDecoration(32);
         dataBinding.galleryGrid.addItemDecoration(decoration);
 
-       /* getImages();
-        imageViewModel.getImages().observe(this, this::handleUploadImageResponse);*/
+//        getImages();
+        mainViewModel.getImages().observe(this, this::handleUploadImageResponse);
     }
 
     private void getImages() {
@@ -139,7 +122,7 @@ public class GalleryFragment extends Fragment implements Injectable {
                 Toast.makeText(getActivity(), "Successfully uploaded", Toast.LENGTH_SHORT).
                         show();
                 // Store in database
-                storeImageUrlInDatabase(imageViewModel.getSuccessfullyUploadedImages());
+                storeImageUrlInDatabase(mainViewModel.getSuccessfullyUploadedImages());
             }
         }
     }
@@ -160,7 +143,7 @@ public class GalleryFragment extends Fragment implements Injectable {
 
     private void uploadImages() {
         ((BaseActivity) getActivity()).showProgress(100);
-        imageViewModel.uploadImages(ImageUtils.getImages(mSelectedImagesList));
+        mainViewModel.uploadImages(ImageUtils.getImages(mSelectedImagesList));
     }
 
 
@@ -196,7 +179,7 @@ public class GalleryFragment extends Fragment implements Injectable {
     }
 
     public class Handler {
-        public void onClickGoogle(View view) {
+        public void onClickUploadImage(View view) {
             if (checkAndRequestPermissions()) {
                 openChooseActivity();
             }

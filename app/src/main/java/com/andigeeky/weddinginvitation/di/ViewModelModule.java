@@ -5,7 +5,7 @@ import android.arch.lifecycle.ViewModelProvider;
 
 import com.andigeeky.weddinginvitation.model.WeddingViewModelFactory;
 import com.andigeeky.weddinginvitation.presentation.RegisterUserViewModel;
-import com.andigeeky.weddinginvitation.storage.upload.ImageViewModel;
+import com.andigeeky.weddinginvitation.storage.upload.MainViewModel;
 import com.andigeeky.weddinginvitation.view.user.UserViewModel;
 
 import dagger.Binds;
@@ -26,8 +26,8 @@ public abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(ImageViewModel.class)
-    abstract ViewModel bindImageViewModel(ImageViewModel imageViewModel);
+    @ViewModelKey(MainViewModel.class)
+    abstract ViewModel bindMainViewModel(MainViewModel mainViewModel);
 
     @Binds
     abstract ViewModelProvider.Factory bindViewModelFactory(WeddingViewModelFactory factory);
