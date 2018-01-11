@@ -1,19 +1,25 @@
 package com.andigeeky.weddinginvitation.storage.upload;
 
 import android.Manifest;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 import com.andigeeky.weddinginvitation.R;
 import com.andigeeky.weddinginvitation.databinding.ActivityUploadBinding;
+import com.andigeeky.weddinginvitation.domain.service.networking.common.Resource;
 import com.andigeeky.weddinginvitation.domain.service.networking.common.Status;
+import com.andigeeky.weddinginvitation.firestore.AddImageService;
 import com.andigeeky.weddinginvitation.view.BaseActivity;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.haresh.multipleimagepickerlibrary.MultiImageSelector;
 
 import java.util.ArrayList;
@@ -44,6 +50,28 @@ public class UploadActivity extends BaseActivity {
         activityUploadBinding.btnUploadImages.setOnClickListener(v -> {
             if (checkAndRequestPermissions()) {
                 openChooseActivity();
+            }
+        });
+
+        getImages();
+    }
+
+    private void getImages() {
+        LiveData<Resource<QuerySnapshot>> images = AddImageService.getInstance().getImages();
+        images.observe(this, querySnapshotResource -> {
+            if (querySnapshotResource.status == Status.LOADING) {
+                startLoading();
+            } else if (querySnapshotResource.status == Status.SUCCESS) {
+                // Apply to adapter
+                stopLoading();
+                if (querySnapshotResource.data.getDocuments().size() > 0) {
+                    Toast.makeText(this, querySnapshotResource.data.getDocuments().size()+" images found..!!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "No images found..", Toast.LENGTH_SHORT).show();
+                }
+            } else if (querySnapshotResource.status == Status.ERROR) {
+                stopLoading();
+                Toast.makeText(this, "Error while getting images..", Toast.LENGTH_SHORT).show();
             }
         });
     }
