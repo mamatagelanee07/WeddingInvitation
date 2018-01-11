@@ -29,7 +29,7 @@ public class AddImageService {
         return instance;
     }
 
-    public LiveData<Resource<Void>> AddImages(ArrayList<ImageVO> images) {
+    public LiveData<Resource<Void>> addImages(ArrayList<ImageVO> images) {
         return new NetworkBoundResource<Void>(new InstantAppExecutors()) {
             @NonNull
             @Override

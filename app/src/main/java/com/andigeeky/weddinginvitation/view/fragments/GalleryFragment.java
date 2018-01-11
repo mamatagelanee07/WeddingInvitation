@@ -1,7 +1,6 @@
 package com.andigeeky.weddinginvitation.view.fragments;
 
 import android.Manifest;
-import android.arch.lifecycle.LiveData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingComponent;
@@ -24,14 +23,13 @@ import com.andigeeky.weddinginvitation.databinding.FragmentGalleryBinding;
 import com.andigeeky.weddinginvitation.di.Injectable;
 import com.andigeeky.weddinginvitation.domain.service.networking.common.Resource;
 import com.andigeeky.weddinginvitation.domain.service.networking.common.Status;
-import com.andigeeky.weddinginvitation.firestore.AddImageService;
-import com.andigeeky.weddinginvitation.storage.upload.Image;
 import com.andigeeky.weddinginvitation.storage.upload.ImageUtils;
 import com.andigeeky.weddinginvitation.storage.upload.MainViewModel;
 import com.andigeeky.weddinginvitation.storage.upload.UploadImageResponse;
 import com.andigeeky.weddinginvitation.view.BaseActivity;
 import com.andigeeky.weddinginvitation.view.adapter.GalleryAdapter;
 import com.andigeeky.weddinginvitation.view.adapter.SpacesItemDecoration;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.haresh.multipleimagepickerlibrary.MultiImageSelector;
 
@@ -73,35 +71,53 @@ public class GalleryFragment extends Fragment implements Injectable {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mainViewModel.getUploadImages().observe(this, this::handleUploadImageResponse);
+
+        mainViewModel.getAddImages().observe(this, this::handleAddImagesResponse);
+        mainViewModel.getImages().observe(this, this::handleGetImagesResponse);
+
+        mainViewModel.getImageData();
+    }
+
+    private void handleGetImagesResponse(Resource<QuerySnapshot> querySnapshotResource) {
+        if (querySnapshotResource.status == Status.LOADING) {
+            ((BaseActivity) getActivity()).startLoading();
+        } else if (querySnapshotResource.status == Status.SUCCESS) {
+            ((BaseActivity) getActivity()).stopLoading();
+            if (querySnapshotResource.data.getDocuments().size() > 0) {
+                setAdapter(querySnapshotResource.data.getDocuments());
+            } else {
+                Toast.makeText(getActivity(), "No images found..", Toast.LENGTH_SHORT).show();
+            }
+        } else if (querySnapshotResource.status == Status.ERROR) {
+            ((BaseActivity) getActivity()).stopLoading();
+            Toast.makeText(getActivity(), "Error while getting images..", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void setAdapter(List<DocumentSnapshot> documents) {
         dataBinding.galleryGrid.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 
-        GalleryAdapter adapter = new GalleryAdapter(getContext());
+        GalleryAdapter adapter = new GalleryAdapter(getContext(), documents);
         dataBinding.galleryGrid.setAdapter(adapter);
         SpacesItemDecoration decoration = new SpacesItemDecoration(32);
         dataBinding.galleryGrid.addItemDecoration(decoration);
-
-//        getImages();
-        mainViewModel.getImages().observe(this, this::handleUploadImageResponse);
     }
 
-    private void getImages() {
-        LiveData<Resource<QuerySnapshot>> images = AddImageService.getInstance().getImages();
-        images.observe(this, querySnapshotResource -> {
-            if (querySnapshotResource.status == Status.LOADING) {
-                ((BaseActivity) getActivity()).startLoading();
-            } else if (querySnapshotResource.status == Status.SUCCESS) {
-                // Apply to adapter
-                ((BaseActivity) getActivity()).stopLoading();
-                if (querySnapshotResource.data.getDocuments().size() > 0) {
-                    Toast.makeText(getActivity(), querySnapshotResource.data.getDocuments().size() + " images found..!!", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity(), "No images found..", Toast.LENGTH_SHORT).show();
-                }
-            } else if (querySnapshotResource.status == Status.ERROR) {
-                ((BaseActivity) getActivity()).stopLoading();
-                Toast.makeText(getActivity(), "Error while getting images..", Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void handleAddImagesResponse(Resource<Void> voidResource) {
+        if (voidResource.status == Status.LOADING) {
+            ((BaseActivity) getActivity()).startLoading();
+        } else if (voidResource.status == Status.SUCCESS) {
+            ((BaseActivity) getActivity()).stopLoading();
+            Toast.makeText(getActivity(), "Images uploaded successfully..", Toast.LENGTH_SHORT).show();
+            mainViewModel.clearData();
+            mainViewModel.getImageData();
+        } else if (voidResource.status == Status.ERROR) {
+            ((BaseActivity) getActivity()).stopLoading();
+            Toast.makeText(getActivity(), "Error while uploading images..", Toast.LENGTH_SHORT).show();
+            mainViewModel.clearData();
+            mainViewModel.getImageData();
+        }
     }
 
     private void handleUploadImageResponse(UploadImageResponse uploadImageResponse) {
@@ -121,15 +137,10 @@ public class GalleryFragment extends Fragment implements Injectable {
                 ((BaseActivity) getActivity()).stopLoading();
                 Toast.makeText(getActivity(), "Successfully uploaded", Toast.LENGTH_SHORT).
                         show();
-                // Store in database
-                storeImageUrlInDatabase(mainViewModel.getSuccessfullyUploadedImages());
+                ((BaseActivity) getActivity()).stopProgress();
+                mainViewModel.addImageData(mainViewModel.getSuccessfullyUploadedImages());
             }
         }
-    }
-
-
-    private void storeImageUrlInDatabase(ArrayList<Image> images) {
-
     }
 
     @Override

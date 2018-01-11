@@ -55,6 +55,7 @@ project.ext {
     facebookVersion = "4.29.0"
     butterKnifeVersion = "8.7.0"
     daggerVersion = "2.11"
+    glideVersion = "3.7.0"
 }
 
 dependencies {
@@ -102,6 +103,9 @@ dependencies {
     // Dagger Android
     annotationProcessor "com.google.dagger:dagger-android-processor:$project.daggerVersion"
     implementation "com.google.dagger:dagger-android-support:$project.daggerVersion"
+
+    // Image loading
+    implementation "com.github.bumptech.glide:glide:$project.glideVersion"
 
     // Test
     testImplementation "junit:junit:$project.jUnitVesrion"

@@ -43,6 +43,12 @@ public class BaseActivity extends AppCompatActivity implements HasSupportFragmen
         progressDialog.setMax(max);
     }
 
+    public void stopProgress() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
     public void setProgressOfDialog(int progress) {
         progressDialog.setProgress(progress);
     }

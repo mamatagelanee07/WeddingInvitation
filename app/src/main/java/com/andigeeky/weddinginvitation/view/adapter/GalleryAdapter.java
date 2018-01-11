@@ -9,18 +9,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.andigeeky.weddinginvitation.R;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.firestore.DocumentSnapshot;
+
+import java.util.List;
 
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryView> {
 
     private Context context;
+    private List<DocumentSnapshot> documents;
 
-    private int[] imgList = {R.drawable.gallery_dark, R.drawable.gallery_dark, R.drawable.gallery_dark, R.drawable.gallery_dark,
-            R.drawable.gallery_dark};
 
-    private String[] nameList = {"One", "Two", "Three", "Four", "Five"};
-
-    public GalleryAdapter(Context context) {
+    public GalleryAdapter(Context context, List<DocumentSnapshot> documents) {
         this.context = context;
+        this.documents = documents;
     }
 
     @Override
@@ -31,13 +34,18 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
 
     @Override
     public void onBindViewHolder(GalleryView holder, int position) {
-//        holder.imageView.setImageResource(imgList[position]);
-        holder.textView.setText(nameList[position]);
+
+        holder.textView.setText(documents.get(position).getString("name"));
+        Glide.with(context).load(documents.get(position).getString("url"))
+                .thumbnail(0.5f)
+                .crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return nameList.length;
+        return documents.size();
     }
 
     class GalleryView extends RecyclerView.ViewHolder {

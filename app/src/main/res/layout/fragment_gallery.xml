@@ -11,7 +11,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/gallery_grid"
@@ -29,8 +29,8 @@
             android:layout_marginEnd="8dp"
             android:onClick="@{handlers::onClickUploadImage}"
             android:src="@drawable/fab_upload_image"
-            app:layout_constraintBottom_toBottomOf="@+id/gallery_grid"
-            app:layout_constraintEnd_toEndOf="@+id/gallery_grid"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </android.support.constraint.ConstraintLayout>
 </layout>
