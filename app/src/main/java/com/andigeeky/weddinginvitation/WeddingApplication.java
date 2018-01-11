@@ -6,7 +6,6 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 
 import com.andigeeky.weddinginvitation.di.AppInjector;
-import com.andigeeky.weddinginvitation.di.DaggerAppComponent;
 
 import javax.inject.Inject;
 
@@ -28,12 +27,6 @@ public class WeddingApplication extends Application implements HasActivityInject
         }
 
         AppInjector.init(this);
-
-        /*DaggerAppComponent
-                .builder()
-                .application(this)
-                .build()
-                .inject(this);*/
     }
 
     @Override

@@ -20,6 +20,14 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="PinkFont">
+        <item name="android:textColor">@color/color_shadow_accent</item>
+        <item name="android:fontFamily">@font/pacifico</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAlignment">gravity</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
     <style name="LoadingDialog" parent="android:Theme.DeviceDefault.Light.Dialog">
         <item name="DialogSpotColor">@color/color_shadow_accent</item>
         <item name="DialogSpotCount">5</item>

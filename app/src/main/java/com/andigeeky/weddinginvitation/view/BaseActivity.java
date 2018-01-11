@@ -38,22 +38,22 @@ public class BaseActivity extends AppCompatActivity implements HasSupportFragmen
         progressDialog.setCancelable(false);
     }
 
-    protected void showProgress(int max) {
+    public void showProgress(int max) {
         progressDialog.show();
         progressDialog.setMax(max);
     }
 
-    protected void setProgressOfDialog(int progress) {
+    public void setProgressOfDialog(int progress) {
         progressDialog.setProgress(progress);
     }
 
-    protected void startLoading() {
+    public void startLoading() {
         if (loadingDialog != null && !loadingDialog.isShowing()) {
             loadingDialog.show();
         }
     }
 
-    protected void stopLoading() {
+    public void stopLoading() {
         if (loadingDialog != null && loadingDialog.isShowing()) {
             loadingDialog.dismiss();
         }

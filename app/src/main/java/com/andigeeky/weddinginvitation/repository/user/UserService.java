@@ -9,6 +9,7 @@ import com.andigeeky.weddinginvitation.domain.service.networking.common.InstantA
 import com.andigeeky.weddinginvitation.domain.service.networking.common.NetworkBoundResource;
 import com.andigeeky.weddinginvitation.domain.service.networking.common.Resource;
 import com.andigeeky.weddinginvitation.model.AccountType;
+import com.andigeeky.weddinginvitation.view.vo.Credentials;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,6 +42,26 @@ public class UserService {
             @Override
             protected LiveData<Task<AuthResult>> createCall() {
                 return getRegisterUserTask(request);
+            }
+        }.asLiveData();
+    }
+
+    public LiveData<Resource<AuthResult>> login(Credentials credentials) {
+        return new NetworkBoundResource<AuthResult>(new InstantAppExecutors()) {
+            @NonNull
+            @Override
+            protected LiveData<Task<AuthResult>> createCall() {
+                return getLoginTask(credentials);
+            }
+        }.asLiveData();
+    }
+
+    public LiveData<Resource<Void>> resetPassword(Credentials credentials) {
+        return new NetworkBoundResource<Void>(new InstantAppExecutors()) {
+            @NonNull
+            @Override
+            protected LiveData<Task<Void>> createCall() {
+                return getResetPasswordTask(credentials);
             }
         }.asLiveData();
     }
@@ -83,6 +104,20 @@ public class UserService {
             resultTask.addOnCompleteListener(liveTask::postValue);
         }
 
+        return liveTask;
+    }
+
+    private LiveData<Task<AuthResult>> getLoginTask(Credentials credentials) {
+        MutableLiveData<Task<AuthResult>> liveTask = new MutableLiveData<>();
+        Task<AuthResult> voidTask = firebaseAuth.signInWithEmailAndPassword(credentials.getEmail(), credentials.getPassword());
+        voidTask.addOnCompleteListener(liveTask::postValue);
+        return liveTask;
+    }
+
+    private LiveData<Task<Void>> getResetPasswordTask(Credentials credentials) {
+        MutableLiveData<Task<Void>> liveTask = new MutableLiveData<>();
+        Task<Void> voidTask = firebaseAuth.sendPasswordResetEmail(credentials.getEmail());
+        voidTask.addOnCompleteListener(liveTask::postValue);
         return liveTask;
     }
 

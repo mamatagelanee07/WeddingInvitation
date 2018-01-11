@@ -2,9 +2,11 @@ package com.andigeeky.weddinginvitation.repository.user;
 
 
 import android.arch.lifecycle.LiveData;
+import android.net.wifi.hotspot2.pps.Credential;
 
 import com.andigeeky.weddinginvitation.domain.service.RegisterCredentials;
 import com.andigeeky.weddinginvitation.domain.service.networking.common.Resource;
+import com.andigeeky.weddinginvitation.view.vo.Credentials;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -21,6 +23,14 @@ public class UserRepository {
 
     public LiveData<Resource<AuthResult>> register(RegisterCredentials registerCredentials) {
         return UserService.getInstance().registerUser(registerCredentials);
+    }
+
+    public LiveData<Resource<AuthResult>> login(Credentials credential) {
+        return UserService.getInstance().login(credential);
+    }
+
+    public LiveData<Resource<Void>> resetPassword(Credentials credential) {
+        return UserService.getInstance().resetPassword(credential);
     }
 
     public FirebaseUser getUser() {

@@ -1,7 +1,6 @@
 package com.andigeeky.weddinginvitation.common;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 
 import com.facebook.CallbackManager;
@@ -12,15 +11,17 @@ import com.facebook.login.LoginResult;
 
 import java.util.Arrays;
 
+import javax.inject.Inject;
+
 import timber.log.Timber;
 
-public class FacebookLoginHelper {
+public class FacebookUtils {
     private CallbackManager callbackManager;
-    private Context context;
+    private Activity mActivity;
     private FacebookAuthHandler authHandler;
 
-    public FacebookLoginHelper(Context context) {
-        this.context = context;
+    public FacebookUtils(Activity mActivity) {
+        this.mActivity = mActivity;
         callbackManager = CallbackManager.Factory.create();
 
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -57,7 +58,7 @@ public class FacebookLoginHelper {
     }
 
     public void getFacebookCredentials() {
-        LoginManager.getInstance().logInWithReadPermissions((Activity) context,
+        LoginManager.getInstance().logInWithReadPermissions(mActivity,
                 Arrays.asList("public_profile", "email"));
     }
 

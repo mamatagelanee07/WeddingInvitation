@@ -1,7 +1,6 @@
 package com.andigeeky.weddinginvitation.common;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 
 import com.andigeeky.weddinginvitation.R;
@@ -12,28 +11,30 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
+import javax.inject.Inject;
+
 import timber.log.Timber;
 
-public class GoogleLoginHelper {
+public class GoogleUtils {
     public static final int RC_SIGN_IN = 9001;
 
-    private Context context;
+    private Activity mActivity;
     private GoogleSignInClient mGoogleSignInClient;
 
-    public GoogleLoginHelper(Context context) {
-        this.context = context;
+    public GoogleUtils(Activity mActivity) {
+        this.mActivity = mActivity;
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(context.getString(R.string.default_web_client_id))
+                .requestIdToken(mActivity.getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
-        mGoogleSignInClient = GoogleSignIn.getClient(context, gso);
+        mGoogleSignInClient = GoogleSignIn.getClient(mActivity, gso);
     }
 
     public void getGoogleCredentials() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        ((Activity) context).startActivityForResult(signInIntent, RC_SIGN_IN);
+        (mActivity).startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     public GoogleSignInAccount onLoginResult(int requestCode, int resultCode, Intent data) {

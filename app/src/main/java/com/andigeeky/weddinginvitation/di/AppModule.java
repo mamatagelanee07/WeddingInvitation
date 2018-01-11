@@ -12,8 +12,7 @@ import dagger.Provides;
 /**
  * This is where you will inject application-wide dependencies.
  */
-@Module(subcomponents = {SignUpScreenComponent.class},
-        includes = {ViewModelModule.class, FirebaseModule.class, MainActivityModule.class})
+@Module(includes = {ViewModelModule.class, FirebaseModule.class, MainActivityModule.class})
 public class AppModule {
     @Singleton
     @Provides
