@@ -4,19 +4,19 @@
     <item
         android:id="@+id/action_gallery"
         android:enabled="true"
-        android:icon="@drawable/selector_gallery"
+        android:icon="@drawable/gallery_dark"
         android:title="@string/text_gallery"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_user"
-        android:enabled="true"
-        android:icon="@drawable/selector_user"
+        android:enabled="false"
+        android:icon="@drawable/user_dark"
         android:title="@string/text_user"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_invitation"
-        android:enabled="true"
-        android:icon="@drawable/selector_invitation"
+        android:enabled="false"
+        android:icon="@drawable/invitation_dark"
         android:title="@string/text_invitation"
         app:showAsAction="ifRoom" />
 </menu>

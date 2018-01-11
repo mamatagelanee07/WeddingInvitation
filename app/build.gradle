@@ -66,6 +66,7 @@ dependencies {
     implementation "com.android.support.constraint:constraint-layout:$project.constraintLayoutVersion"
     implementation "com.android.support:support-annotations:$project.appcompactVersion"
     implementation "com.android.support:design:$project.appcompactVersion"
+    implementation "com.android.support:recyclerview-v7:$project.appcompactVersion"
 
     // Firebase
     implementation "com.google.firebase:firebase-core:$project.firebaseVersion"
